@@ -1,8 +1,8 @@
+import 'package:education_app/widgets/custom_icon_bottom.dart';
+import 'package:education_app/widgets/enroll_bottom_sheet.dart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:education_app/constants/color.dart';
-import 'package:education_app/widgets/lesson_card.dart';
-import 'package:education_app/models/lesson.dart';
+
 
 class TakeAction3Page extends StatefulWidget {
   final String title;
@@ -14,13 +14,6 @@ class TakeAction3Page extends StatefulWidget {
 }
 
 class _TakeAction3PageState extends State<TakeAction3Page> {
-  int _selectedTag = 0;
-
-  void changeTab(int index) {
-    setState(() {
-      _selectedTag = index;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +120,7 @@ class _TakeAction3PageState extends State<TakeAction3Page> {
               ),
               SizedBox(
                 height: MediaQuery.of(context).viewInsets.bottom,
-              ), // Handle keyboard overlap
+              ), 
             ],
           ),
         ),
@@ -136,7 +129,7 @@ class _TakeAction3PageState extends State<TakeAction3Page> {
           backgroundColor: Colors.white,
           enableDrag: false,
           builder: (context) {
-            return SizedBox(
+            return const SizedBox(
               height: 80,
               child: EnrollBottomSheet(),
             );
@@ -147,93 +140,3 @@ class _TakeAction3PageState extends State<TakeAction3Page> {
   }
 }
 
-class EnrollBottomSheet extends StatefulWidget {
-  const EnrollBottomSheet({Key? key}) : super(key: key);
-
-  @override
-  _EnrollBottomSheetState createState() => _EnrollBottomSheetState();
-}
-
-class _EnrollBottomSheetState extends State<EnrollBottomSheet> {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 30.0,
-      ),
-      child: Row(
-        children: [
-          CustomIconButton(
-            onTap: () {},
-            height: 45,
-            width: 45,
-            child: const Icon(
-              Icons.bookmark,
-              color: Colors.pink,
-              size: 30,
-            ),
-          ),
-          const SizedBox(
-            width: 20,
-          ),
-          Expanded(
-            child: CustomIconButton(
-              onTap: () {},
-              color: Color.fromARGB(255, 27, 94, 32),
-              height: 45,
-              width: 45,
-              child: const Text(
-                "Take Action",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                ),
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-}
-
-class CustomIconButton extends StatelessWidget {
-  final Widget child;
-  final double height;
-  final double width;
-  final Color? color;
-  final VoidCallback onTap;
-
-  const CustomIconButton({
-    Key? key,
-    required this.child,
-    required this.height,
-    required this.width,
-    this.color = Colors.white,
-    required this.onTap,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Ink(
-      child: InkWell(
-        borderRadius: BorderRadius.circular(12),
-        child: Center(child: child),
-        onTap: onTap,
-      ),
-      height: height,
-      width: width,
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(.1),
-            blurRadius: 2.0,
-            spreadRadius: .05,
-          ),
-        ],
-      ),
-    );
-  }
-}
