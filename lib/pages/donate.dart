@@ -120,7 +120,7 @@ class DonatePage extends StatelessWidget {
                             borderRadius: BorderRadius.circular(8.0),
                             image: DecorationImage(
                               fit: BoxFit.cover,
-                              image: AssetImage("images/${item.image}"),
+                              image: AssetImage("assets/images/${item.image}"),
                             ))),
                   ],
                 ),

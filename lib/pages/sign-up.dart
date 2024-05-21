@@ -308,6 +308,7 @@ class _FormContentState extends State<_FormContent> {
                             email: _emailController.text,
                             password: _passwordController.text)
                         .then((userCredential) {
+                      print(userCredential);
                       final user = <String, dynamic>{
                         "username": _usernameController.text,
                         "email": _emailController.text,

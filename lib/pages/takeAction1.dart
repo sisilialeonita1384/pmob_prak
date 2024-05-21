@@ -7,7 +7,7 @@ import '../widgets/enroll_bottom_sheet.dart.dart';
 class TakeAction1Page extends StatefulWidget {
   final String title;
 
-  const TakeAction1Page({Key? key, required this.title}) : super(key: key);
+  TakeAction1Page({Key? key, required this.title}) : super(key: key);
 
   @override
   _TakeAction1PageState createState() => _TakeAction1PageState();
@@ -51,7 +51,7 @@ class _TakeAction1PageState extends State<TakeAction1Page> {
                 ],
               ),
               Container(
-                child: Image.asset("images/deforestation_action.jpg"),
+                child: Image.asset("assets/images/deforestation_action.jpg"),
                 margin: EdgeInsets.only(top: 20),
               ),
               Container(

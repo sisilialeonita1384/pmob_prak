@@ -1,17 +1,31 @@
+// import 'package:education_app/providers/add_volunteers.dart';
+import 'package:education_app/providers/volunteers.dart';
+import 'package:education_app/pages/sign-up.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 
 class VolunteerFormPage extends StatefulWidget {
-  const VolunteerFormPage({Key? key}) : super(key: key);
+  const VolunteerFormPage({super.key});
+
+  // const VolunteerFormPage({Key? key}) : super(key: key);
 
   @override
   _VolunteerFormPageState createState() => _VolunteerFormPageState();
 }
 
 class _VolunteerFormPageState extends State<VolunteerFormPage> {
+  final Volunteers controller = Volunteers();
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _fullNameController = TextEditingController();
-  final TextEditingController _ageController = TextEditingController();
-  final TextEditingController _reasonController = TextEditingController();
+  final TextEditingController fullNameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController ageController = TextEditingController();
+  final TextEditingController reasonController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   String? _selectedProvince;
   String? _selectedCity;
@@ -77,6 +91,7 @@ class _VolunteerFormPageState extends State<VolunteerFormPage> {
 
   @override
   Widget build(BuildContext context) {
+    // final dataVolunteer = Provider.of<Volunteers>(context).volunteer;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -111,7 +126,10 @@ class _VolunteerFormPageState extends State<VolunteerFormPage> {
             onPressed: () {
               Navigator.pop(context);
             },
-            icon: Icon(Icons.arrow_back, color: Colors.white,),
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ),
           ),
           title: const Text(
             'Join Volunteer',
@@ -140,7 +158,7 @@ class _VolunteerFormPageState extends State<VolunteerFormPage> {
             child: ListView(
               children: [
                 _buildShadowedTextField(
-                  controller: _fullNameController,
+                  controller: fullNameController,
                   labelText: 'Full Name',
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -151,7 +169,19 @@ class _VolunteerFormPageState extends State<VolunteerFormPage> {
                 ),
                 SizedBox(height: 30.0),
                 _buildShadowedTextField(
-                  controller: _ageController,
+                  controller: emailController,
+                  labelText: 'E-mail',
+                  
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your full name';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 30.0),
+                _buildShadowedTextField(
+                  controller: ageController,
                   labelText: 'Age',
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -209,7 +239,7 @@ class _VolunteerFormPageState extends State<VolunteerFormPage> {
                 ),
                 SizedBox(height: 30.0),
                 _buildShadowedTextField(
-                  controller: _reasonController,
+                  controller: reasonController,
                   labelText: 'Reason for Volunteering',
                   maxLines: 4,
                   validator: (value) {
@@ -221,15 +251,30 @@ class _VolunteerFormPageState extends State<VolunteerFormPage> {
                 ),
                 SizedBox(height: 45.0),
                 ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      showSuccessDialog(context);
+                  onPressed: () async {
+                    // Ganti dengan nilai yang sesuai, bisa didapatkan dari input pengguna atau sumber lain
+                    // String fullName = "John Doe";
+                    // String age = "30";
+                    // String province = "Jakarta";
+                    // String city = "Jakarta Utara";
+                    // String reason = "Volunteering to help others";
+
+                    try {
+                      await Volunteers()
+                          .addVolunteer(fullNameController.text, emailController.text, ageController.text, _selectedProvince as String, _selectedCity as String, reasonController.text);
+                      // Tambahkan logika untuk menampilkan dialog sukses di sini jika perlu
+                      print("Added Volunteer Data to Firestore");
+                    } catch (error) {
+                      // Tambahkan logika untuk menampilkan dialog kesalahan di sini jika perlu
+                      print("Error adding volunteer data to Firestore: $error");
                     }
                   },
                   style: ButtonStyle(
                     fixedSize: MaterialStateProperty.all(Size(120, 40)),
-                    backgroundColor: MaterialStateProperty.all(Color.fromRGBO(10, 99, 61, 50)),
-                    overlayColor: MaterialStateProperty.all(Color.fromRGBO(78, 138, 103, 50)),
+                    backgroundColor: MaterialStateProperty.all(
+                        Color.fromRGBO(10, 99, 61, 50)),
+                    overlayColor: MaterialStateProperty.all(
+                        Color.fromRGBO(78, 138, 103, 50)),
                   ),
                   child: const Text(
                     'Submit',
@@ -258,7 +303,7 @@ class _VolunteerFormPageState extends State<VolunteerFormPage> {
             color: Colors.grey.withOpacity(0.5),
             spreadRadius: 2,
             blurRadius: 7,
-            offset: Offset(0, 3), 
+            offset: Offset(0, 3),
           ),
         ],
         borderRadius: BorderRadius.circular(20.0),
@@ -267,11 +312,11 @@ class _VolunteerFormPageState extends State<VolunteerFormPage> {
         controller: controller,
         decoration: InputDecoration(
           labelText: labelText,
-          labelStyle: TextStyle(color: Colors.white), 
+          labelStyle: TextStyle(color: Colors.white),
         ),
         validator: validator,
         maxLines: maxLines,
-        style: TextStyle(color: Colors.white), 
+        style: TextStyle(color: Colors.white),
       ),
     );
   }
@@ -301,11 +346,11 @@ class _VolunteerFormPageState extends State<VolunteerFormPage> {
         onChanged: onChanged,
         decoration: InputDecoration(
           labelText: labelText,
-          labelStyle: TextStyle(color: Colors.white), 
+          labelStyle: TextStyle(color: Colors.white),
         ),
         validator: validator,
-        style: TextStyle(color: Colors.white), 
-        dropdownColor: Color.fromRGBO(78, 138, 103, 50), 
+        style: TextStyle(color: Colors.white),
+        dropdownColor: Color.fromRGBO(78, 138, 103, 50),
       ),
     );
   }
@@ -351,9 +396,11 @@ class _VolunteerFormPageState extends State<VolunteerFormPage> {
                 ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).pop();
+                    // Navigator.push(context, MaterialPageRoute(builder: (context) => TakeAction1Page(title: '',)));
                   },
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Color.fromRGBO(10, 99, 61, 50)),
+                    backgroundColor: MaterialStateProperty.all(
+                        Color.fromRGBO(10, 99, 61, 50)),
                   ),
                   child: const Text(
                     'OK',
