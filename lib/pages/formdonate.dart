@@ -1,3 +1,5 @@
+import 'package:education_app/models/donation.dart';
+import 'package:education_app/providers/donations.dart';
 import 'package:flutter/material.dart';
 
 class DonateFormPage extends StatefulWidget {
@@ -8,11 +10,12 @@ class DonateFormPage extends StatefulWidget {
 }
 
 class _DonateFormPageState extends State<DonateFormPage> {
+  final Donations controller = Donations();
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _fullNameController = TextEditingController();
-  final TextEditingController _ageController = TextEditingController();
-  final TextEditingController _paymentController = TextEditingController();
-
+  final TextEditingController fullNameDonationController = TextEditingController();
+    final TextEditingController emailDonationController = TextEditingController();
+  final TextEditingController ageDonationController = TextEditingController();
+  final TextEditingController paymentController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -81,7 +84,7 @@ class _DonateFormPageState extends State<DonateFormPage> {
             child: ListView(
               children: [
                 _buildShadowedTextField(
-                  controller: _fullNameController,
+                  controller: fullNameDonationController,
                   labelText: 'Full Name',
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -93,7 +96,7 @@ class _DonateFormPageState extends State<DonateFormPage> {
                 ),
                 SizedBox(height: 30.0),
                 _buildShadowedTextField(
-                  controller: _ageController,
+                  controller: ageDonationController,
                   labelText: 'Age',
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -105,7 +108,7 @@ class _DonateFormPageState extends State<DonateFormPage> {
                 ),
                 SizedBox(height: 30.0),
                 _buildShadowedTextField(
-                  controller: _paymentController,
+                  controller: paymentController,
                   labelText: 'Amount of Payment',
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -117,9 +120,42 @@ class _DonateFormPageState extends State<DonateFormPage> {
                 ),
                 SizedBox(height: 45.0),
                 ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
+                  onPressed: () async {
+                    // Ganti dengan nilai yang sesuai, bisa didapatkan dari input pengguna atau sumber lain
+                    // String fullName = "John Doe";
+                    // String age = "30";
+                    // String province = "Jakarta";
+                    // String city = "Jakarta Utara";
+                    // String reason = "Volunteering to help others";
+
+                    try {
+                      await Donations().addDonation(
+                          fullNameDonationController.text,
+                          emailDonationController.text,
+                          ageDonationController.text,
+                          paymentController.text);
                       showSuccessDialog(context);
+                      print("Added Volunteer Data to Firestore");
+                    } catch (error) {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text("Error"),
+                            content: Text(
+                                "Error mendaftar volunteer $error"), //ya isi sendiri lah apa isinya, yg sukses jg sesuaiin aja sendiri
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text("OK"),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                      print("Error adding volunteer data to Firestore: $error");
                     }
                   },
                   style: ButtonStyle(
@@ -148,7 +184,7 @@ class _DonateFormPageState extends State<DonateFormPage> {
     required String labelText,
     required String? Function(String?)? validator,
     int maxLines = 1,
-    TextStyle? style, 
+    TextStyle? style,
   }) {
     return Container(
       decoration: BoxDecoration(
@@ -170,7 +206,7 @@ class _DonateFormPageState extends State<DonateFormPage> {
         ),
         validator: validator,
         maxLines: maxLines,
-        style: style, 
+        style: style,
       ),
     );
   }
