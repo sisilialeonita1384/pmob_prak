@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:education_app/providers/volunteers_display.dart';
+import 'package:provider/provider.dart';
+
 
 class HistoryPage extends StatefulWidget {
   const HistoryPage({super.key});
@@ -12,6 +15,7 @@ class _HistoryPageState extends State<HistoryPage> {
 
   @override
   Widget build(BuildContext context) {
+    // final dataDisplayVolunteers = Provider.of<VolunteerDisplayProvider>(context).VolunteerDisplayItem;
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(120.0),
@@ -126,9 +130,9 @@ class _HistoryPageState extends State<HistoryPage> {
             child: Container(
               margin: EdgeInsets.only(top: 20, left: 15, right: 15, bottom: 20),
               child: ListView.builder(
-                itemCount: _volunteer.length,
+                itemCount: _volunteerDisplay.length,
                 itemBuilder: (BuildContext context, int index) {
-                  final item = _volunteer[index];
+                  final item = _volunteerDisplay[index];
                   return Container(
                     height: 136,
                     margin: const EdgeInsets.symmetric(
@@ -155,21 +159,23 @@ class _HistoryPageState extends State<HistoryPage> {
                           children: [
                             Text(
                               item.title,
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
                             Text(
                               item.postedOn,
-                              style: TextStyle(fontSize: 12, color: Colors.white),
+                              style:
+                                  TextStyle(fontSize: 12, color: Colors.white),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
                             const SizedBox(height: 10),
                             Row(mainAxisSize: MainAxisSize.min, children: [
                               Text(
-                                "${item.noOfVolunteers.toString()} have joined",
+                                "${item.noOfVolunteersDisplay.toString()} have joined",
                                 style: const TextStyle(
                                     color: Color.fromRGBO(255, 242, 215, 0.808),
                                     fontWeight: FontWeight.bold),
@@ -185,7 +191,8 @@ class _HistoryPageState extends State<HistoryPage> {
                                 borderRadius: BorderRadius.circular(8.0),
                                 image: DecorationImage(
                                   fit: BoxFit.cover,
-                                  image: AssetImage("images/${item.image}"),
+                                  image:
+                                      AssetImage("assets/images/${item.image}"),
                                 ))),
                       ],
                     ),
@@ -257,7 +264,8 @@ class _HistoryPageState extends State<HistoryPage> {
                                 borderRadius: BorderRadius.circular(8.0),
                                 image: DecorationImage(
                                   fit: BoxFit.cover,
-                                  image: AssetImage("images/${item.image}"),
+                                  image:
+                                      AssetImage("assets/images/${item.image}"),
                                 ))),
                       ],
                     ),
@@ -272,36 +280,54 @@ class _HistoryPageState extends State<HistoryPage> {
   }
 }
 
-class Volunteer {
+class VolunteerDisplay {
   final String title;
   final String subtitle;
-  final int noOfVolunteers;
+  final int noOfVolunteersDisplay;
   final String image;
   final String postedOn;
 
-  Volunteer(
+  VolunteerDisplay(
       {required this.title,
       required this.subtitle,
-      required this.noOfVolunteers,
+      required this.noOfVolunteersDisplay,
       required this.image,
       required this.postedOn});
 }
 
-final List<Volunteer> _volunteer = [
-  Volunteer(
+final List<VolunteerDisplay> _volunteerDisplay = [
+  VolunteerDisplay(
     title:
         "Engaging Volunteers in the Fight Against Deforestation: Opportunities and Impact",
     subtitle: 'The feature, which introduced in April as part of Instagram',
-    noOfVolunteers: 16,
+    noOfVolunteersDisplay: 16,
     image: "deforestation.jpg",
     postedOn: "Yesterday",
   ),
-  Volunteer(
+  VolunteerDisplay(
       title: "Together, We Can Overcome: Aid Flood Victims Today!",
       subtitle: 'The feature, which introduced in April as part of Instagram',
-      noOfVolunteers: 37,
+      noOfVolunteersDisplay: 37,
       image: "climatechange.png",
       postedOn: "4 hours ago"),
+  VolunteerDisplay(
+      title: "Join the Movement: Empower Communities, Transform Lives in the Global Clean Water Crisis!",
+      subtitle: 'The feature, which introduced in April as part of Instagram',
+      noOfVolunteersDisplay: 2,
+      image: "watercrisis_action.jpg",
+      postedOn: "an hour ago"),
+  VolunteerDisplay(
+      title: "Join Volunteer to Help Overcome the Plastic Curse!",
+      subtitle: 'The feature, which introduced in April as part of Instagram',
+      noOfVolunteersDisplay: 19,
+      image: "waste_action.jpg",
+      postedOn: "10 hours ago"),
+  VolunteerDisplay(
+      title: "Join Volunteer to Preserve Marine Environments!",
+      subtitle: 'The feature, which introduced in April as part of Instagram',
+      noOfVolunteersDisplay: 1,
+      image: "marine_action.jpg",
+      postedOn: "47 minutes ago"),
 ];
 
 class Donate {
@@ -320,7 +346,7 @@ class Donate {
 final List<Donate> _donate = [
   Donate(
     title:
-         "Planting Hope, Preserving Nature: Donate Rp10,000 to Plant 1 Tree and Change the Future of the Environment!",
+        "Planting Hope, Preserving Nature: Donate Rp10,000 to Plant 1 Tree and Change the Future of the Environment!",
     amount: "Rp 300.000",
     image: "deforestation.jpg",
     postedOn: "Yesterday",

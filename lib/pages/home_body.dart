@@ -63,27 +63,27 @@ class HomeBody extends StatelessWidget {
     Category(
       name: 'Deforestation',
       noOfVolunteers: 55,
-      thumbnail: 'images/deforestation_action.jpg',
+      thumbnail: 'assets/images/deforestation_action.jpg',
     ),
     Category(
       name: 'Flood',
       noOfVolunteers: 20,
-      thumbnail: 'images/flood_action.jpg',
+      thumbnail: 'assets/images/flood_action.jpg',
     ),
     Category(
       name: 'Clean Water Crisis',
       noOfVolunteers: 16,
-      thumbnail: 'images/watercrisis_action.jpg',
+      thumbnail: 'assets/images/watercrisis_action.jpg',
     ),
     Category(
       name: 'Waste Accumulation',
       noOfVolunteers: 25,
-      thumbnail: 'images/waste_action.jpg',
+      thumbnail: 'assets/images/waste_action.jpg',
     ),
     Category(
       name: 'Preserving marine',
       noOfVolunteers: 25,
-      thumbnail: 'images/marine_action.jpg',
+      thumbnail: 'assets/images/marine_action.jpg',
     ),
   ];
 
@@ -163,7 +163,7 @@ class HomeBody extends StatelessWidget {
                     ),
                     const CircleAvatar(
                       radius: 30,
-                      backgroundImage: AssetImage('images/evita.png'),
+                      backgroundImage: AssetImage('assets/images/evita.png'),
                     )
                   ],
                 ),
@@ -220,7 +220,7 @@ class HomeBody extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Image.asset(
-                            "images/${imgList[index]}",
+                            "assets/images/${imgList[index]}",
                             width: 150,
                             height: 90,
                           ),

@@ -19,7 +19,7 @@ class WastePage extends StatelessWidget {
                 centerTitle: true,
                 collapseMode: CollapseMode.parallax,
                 background:
-                    Image.asset("images/waste.png", fit: BoxFit.cover),
+                    Image.asset("assets/images/waste.png", fit: BoxFit.cover),
               ),
             )
           ];

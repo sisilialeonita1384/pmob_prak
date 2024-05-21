@@ -13,8 +13,11 @@ import 'package:education_app/pages/homepage.dart';
 import 'package:education_app/pages/splashscreen.dart';
 import 'package:education_app/pages/takeAction1.dart';
 import 'package:education_app/pages/waste.dart';
+import 'package:education_app/providers/volunteers.dart';
+import 'package:education_app/providers/volunteers_display.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -22,11 +25,11 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  return runApp(const MyApp());
+  return runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  MyApp({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -71,8 +74,6 @@ class MyApp extends StatelessWidget {
         "/profile": (context) => ProfilePage(),
         "/donate": (context) => DonatePage(),
         "/take1": (context) => TakeAction1Page(title: ''),
-        
-       
       },
       initialRoute: "/splash",
     );

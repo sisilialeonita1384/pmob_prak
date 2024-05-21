@@ -19,7 +19,7 @@ class TextileWastePage extends StatelessWidget {
                 centerTitle: true,
                 collapseMode: CollapseMode.parallax,
                 background:
-                    Image.asset("images/textilewaste.jpg", fit: BoxFit.cover),
+                    Image.asset("assets/images/textilewaste.jpg", fit: BoxFit.cover),
               ),
             )
           ];

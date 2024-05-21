@@ -19,7 +19,7 @@ class DeforestationPage extends StatelessWidget {
                 centerTitle: true,
                 collapseMode: CollapseMode.parallax,
                 background:
-                    Image.asset("images/deforestation.jpg", fit: BoxFit.cover),
+                    Image.asset("assets/images/deforestation.jpg", fit: BoxFit.cover),
               ),
             )
           ];

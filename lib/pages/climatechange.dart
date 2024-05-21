@@ -19,7 +19,7 @@ class ClimateChangePage extends StatelessWidget {
                 centerTitle: true,
                 collapseMode: CollapseMode.parallax,
                 background:
-                    Image.asset("images/climatechange.png", fit: BoxFit.cover),
+                    Image.asset("assets/images/climatechange.png", fit: BoxFit.cover),
               ),
             )
           ];
