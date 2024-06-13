@@ -1,7 +1,6 @@
 import 'package:education_app/firebase_options.dart';
 import 'package:education_app/pages/climatechange.dart';
 import 'package:education_app/pages/deforestation.dart';
-import 'package:education_app/pages/details_screen.dart';
 import 'package:education_app/pages/donate.dart';
 import 'package:education_app/pages/flood.dart';
 import 'package:education_app/pages/foodwaste.dart';
@@ -82,8 +81,6 @@ class MyApp extends StatelessWidget {
           "/flood": (context) => FloodPage(),
           "/waste": (context) => WastePage(),
           "/foodwaste": (context) => FoodWastePage(),
-          "/details": (context) =>
-              DetailsScreen(title: "More ways you can help"),
           "/profile": (context) => ProfilePage(),
           "/donate": (context) => DonatePage(),
           "/take1": (context) => TakeAction1Page(title: ''),
