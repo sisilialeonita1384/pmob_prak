@@ -4,16 +4,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:education_app/elements/utils.dart';
 import 'package:education_app/pages/aboutus.dart';
 import 'package:education_app/pages/saved.dart';
-import 'package:education_app/pages/settings.dart';
 import 'package:education_app/pages/sign-in.dart';
 import 'package:education_app/resources/add_data.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:http/http.dart' as http;
-import 'package:fluttertoast/fluttertoast.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);

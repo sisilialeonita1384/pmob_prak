@@ -9,7 +9,7 @@ class Donations with ChangeNotifier {
     List<Donation> donations = [];
     try {
       QuerySnapshot querySnapshot =
-          await _firestore.collection('volunteers').get();
+          await _firestore.collection('donations').get();
       querySnapshot.docs.forEach((doc) {
         donations.add(Donation(
           fullNameDonation: doc['fullNameDonation'],
@@ -20,7 +20,7 @@ class Donations with ChangeNotifier {
       });
       return donations;
     } catch (error) {
-      print('Error getting volunteers: $error');
+      print('Error getting donations: $error');
       return []; 
     }
   }
@@ -32,16 +32,16 @@ class Donations with ChangeNotifier {
     String payment,
   ) async {
     try {
-      await _firestore.collection('volunteers').add({
-        'fullName': fullNameDonation,
-        'email': emailDonation,
-        'age': ageDonation,
+      await _firestore.collection('donations').add({
+        'fullNameDonation': fullNameDonation,
+        // 'email': emailDonation,
+        'ageDonation': ageDonation,
         'payment': payment,
       });
       notifyListeners();
     } catch (error) {
       // Handle error
-      print('Error adding volunteer: $error');
+      print('Error adding donation: $error');
     }
   }
 }

@@ -50,4 +50,6 @@ class Volunteers with ChangeNotifier {
       print('Error adding volunteer: $error');
     }
   }
+
+  getVolunteerArticles() {}
 }
