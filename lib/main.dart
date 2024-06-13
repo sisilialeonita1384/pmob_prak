@@ -1,6 +1,5 @@
 import 'package:education_app/firebase_options.dart';
 import 'package:education_app/pages/climatechange.dart';
-import 'package:education_app/pages/course_screen.dart';
 import 'package:education_app/pages/deforestation.dart';
 import 'package:education_app/pages/details_screen.dart';
 import 'package:education_app/pages/donate.dart';
@@ -78,7 +77,6 @@ class MyApp extends StatelessWidget {
           "/signup": (context) => SignUpPage(),
           "/home": (context) => HomePage(),
           "/history": (context) => HistoryPage(),
-          "/course": (context) => CourseScreen(),
           "/deforestation": (context) => DeforestationPage(),
           "/climatechange": (context) => ClimateChangePage(),
           "/flood": (context) => FloodPage(),
