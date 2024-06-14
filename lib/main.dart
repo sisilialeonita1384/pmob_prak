@@ -81,7 +81,7 @@ class MyApp extends StatelessWidget {
           "/flood": (context) => FloodPage(),
           "/waste": (context) => WastePage(),
           "/foodwaste": (context) => FoodWastePage(),
-          "/profile": (context) => ProfilePage(),
+          "/profile": (context) => ProfilePage(userData: {},),
           "/donate": (context) => DonatePage(),
           "/take1": (context) => TakeAction1Page(title: ''),
         },

@@ -1,35 +1,45 @@
 import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 
-final FirebaseStorage _storage = FirebaseStorage.instance;
-final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+class StoreData with ChangeNotifier {
+  final FirebaseStorage _storage = FirebaseStorage.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-class StoreData {
-  Future<String> uploadImageToStorage(String profileImage, Uint8List file) async {
-    Reference ref = _storage.ref().child(profileImage).child("id");
-    UploadTask uploadTask = ref.putData(file);
-    TaskSnapshot snapshot = await uploadTask;
-    String downloadUrl = await snapshot.ref.getDownloadURL();
-    return downloadUrl;
+  Future<String> uploadImage(Uint8List imageData) async {
+    try {
+      String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+      Reference reference = _storage.ref().child('images/$fileName');
+      UploadTask uploadTask = reference.putData(imageData);
+      TaskSnapshot snapshot = await uploadTask;
+      String downloadUrl = await snapshot.ref.getDownloadURL();
+      return downloadUrl;
+    } catch (error) {
+      print('Error uploading image: $error');
+      throw error;
+    }
   }
 
-  Future<String> saveData(String email, Uint8List file) async {
+  Future<String> saveData(String uid, Uint8List file) async {
     try {
-      String imageUrl = await uploadImageToStorage("profileImage", file);
-      // Cari dokumen pengguna berdasarkan email
-      QuerySnapshot querySnapshot = await _firestore.collection("users").where("email", isEqualTo: email).get();
-      if (querySnapshot.docs.isNotEmpty) {
-        // Dokumen pengguna ditemukan, simpan URL foto profil ke dalam dokumen tersebut
-        DocumentSnapshot userDoc = querySnapshot.docs.first;
-        await userDoc.reference.update({"photoUrl": imageUrl});
-        return "Success";
-      } else {
-        return "User not found";
-      }
+      String imageUrl = await uploadImage(file);
+
+      // Use a transaction to ensure atomicity
+      return await _firestore.runTransaction((transaction) async {
+        QuerySnapshot querySnapshot = await _firestore.collection("users").where("uid", isEqualTo: uid).get();
+        
+        if (querySnapshot.docs.isNotEmpty) {
+          DocumentSnapshot userDoc = querySnapshot.docs.first;
+          transaction.update(userDoc.reference, {"photoUrl": imageUrl});
+          return "Success";
+        } else {
+          return "User not found";
+        }
+      });
     } catch (err) {
+      print('Error saving data: $err');
       return "Error: $err";
     }
   }

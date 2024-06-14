@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:education_app/pages/history.dart';
 import 'package:education_app/pages/donate.dart';
 import 'package:education_app/pages/profile.dart';
+import 'package:get/utils.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -19,7 +20,7 @@ class _HomePageState extends State<HomePage> {
     HomeBody(),
     HistoryPage(),
     DonatePage(),
-    ProfilePage(),
+    ProfilePage(userData: {},)
   ];
   
   @override

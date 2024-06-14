@@ -1,11 +1,13 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:education_app/models/category.dart';
+import 'package:education_app/models/edu_article.dart';
 import 'package:education_app/pages/add_don_article.dart';
 import 'package:education_app/pages/add_edu_article.dart';
 import 'package:education_app/pages/add_vol_article.dart';
 import 'package:education_app/pages/climatechange.dart';
 import 'package:education_app/pages/deforestation.dart';
+import 'package:education_app/pages/detail_article.dart';
 import 'package:education_app/pages/flood.dart';
 import 'package:education_app/pages/foodwaste.dart';
 import 'package:education_app/pages/takeAction1.dart';
@@ -18,32 +20,29 @@ import 'package:education_app/pages/waste.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class HomeBody extends StatelessWidget {
-  HomeBody({super.key});
-  List<String> imgList = [
-    "deforestation.jpg",
-    "climatechange.png",
-    "waste.png",
-    "flood.jpg",
-    "foodwaste.jpg",
-    "textilewaste.jpg",
-  ];
-  List<Widget> newsPage = [
-    DeforestationPage(),
-    ClimateChangePage(),
-    WastePage(),
-    FloodPage(),
-    FoodWastePage(),
-    TextileWastePage(),
-  ];
-  List<String> textList = [
-    "Deforestation",
-    "Climate Change",
-    "Waste Accumulation",
-    "Flood",
-    "Food Waste",
-    "TextileWaste",
-  ];
+class HomeBody extends StatefulWidget {
+  HomeBody({Key? key}) : super(key: key);
+
+  @override
+  _HomeBodyState createState() => _HomeBodyState();
+}
+
+class _HomeBodyState extends State<HomeBody> {
+  List<Artikel> articles = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchArticles();
+  }
+
+  Future<void> fetchArticles() async {
+    final snapshot = await FirebaseFirestore.instance.collection('articles').get();
+    setState(() {
+      articles = snapshot.docs.map((doc) => Artikel.fromFirestore(doc)).toList();
+    });
+  }
+
   List<Widget> gridPage = [
     TakeAction1Page(
       title: '',
@@ -61,6 +60,7 @@ class HomeBody extends StatelessWidget {
       title: '',
     ),
   ];
+
   List<Category> categoryList = [
     Category(
       name: 'Deforestation',
@@ -90,110 +90,111 @@ class HomeBody extends StatelessWidget {
   ];
 
   void _showArticleTypeDialog(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        titlePadding: EdgeInsets.zero,
-        contentPadding: EdgeInsets.zero,
-        actionsPadding: EdgeInsets.zero,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        title: ClipRRect(
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          titlePadding: EdgeInsets.zero,
+          contentPadding: EdgeInsets.zero,
+          actionsPadding: EdgeInsets.zero,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
           ),
-          child: Container(
-            padding: EdgeInsets.all(15),
-            decoration: const BoxDecoration(
-              color: Color.fromRGBO(10, 99, 61, 50),
+          title: ClipRRect(
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
             ),
-            child: const Text(
-              'Pilih Jenis Artikel',
-              style: TextStyle(
-                color: Colors.white,
+            child: Container(
+              padding: EdgeInsets.all(15),
+              decoration: const BoxDecoration(
+                color: Color.fromRGBO(10, 99, 61, 50),
+              ),
+              child: const Text(
+                'Pilih Jenis Artikel',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
               ),
             ),
           ),
-        ),
-        content: Container(
-          decoration: const BoxDecoration(
-            color: Color.fromRGBO(251, 241, 221, 50),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                title: const Text('Artikel Edukasi'),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => AddEducationArticlePage(),
-                    ),
-                  );
-                },
-              ),
-              ListTile(
-                title: const Text('Artikel Volunteer'),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => AddVolunteerArticlePage(),
-                    ),
-                  );
-                },
-              ),
-              ListTile(
-                title: const Text('Artikel Donasi'),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => AddDonationArticlePage(),
-                    ),
-                  );
-                },
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          Container(
+          content: Container(
             decoration: const BoxDecoration(
               color: Color.fromRGBO(251, 241, 221, 50),
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(20),
-                bottomRight: Radius.circular(20),
-              ),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                TextButton(
-                  child: const Text('Batal', style: TextStyle(color: Colors.black)),
-                  onPressed: () {
-                    Navigator.of(context).pop();
+                ListTile(
+                  title: const Text('Artikel Edukasi'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AddEducationArticlePage(),
+                      ),
+                    );
+                  },
+                ),
+                ListTile(
+                  title: const Text('Artikel Volunteer'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AddVolunteerArticlePage(),
+                      ),
+                    );
+                  },
+                ),
+                ListTile(
+                  title: const Text('Artikel Donasi'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AddDonationArticlePage(),
+                      ),
+                    );
                   },
                 ),
               ],
             ),
           ),
-        ],
-      );
-    },
-  );
-}
+          actions: [
+            Container(
+              decoration: const BoxDecoration(
+                color: Color.fromRGBO(251, 241, 221, 50),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(20),
+                  bottomRight: Radius.circular(20),
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    child: const Text('Batal', style: TextStyle(color: Colors.black)),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   // future to fetch user details
   Future<DocumentSnapshot<Map<String, dynamic>>> getUserDetails() async {
-    final currentUser = FirebaseAuth.instance.currentUser;
+    final currentUser
+ = FirebaseAuth.instance.currentUser;
     return await FirebaseFirestore.instance
         .collection("users")
         .doc(currentUser!.email)
@@ -201,6 +202,7 @@ class HomeBody extends StatelessWidget {
   }
 
   int _currentIndexDetails = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -293,71 +295,72 @@ class HomeBody extends StatelessWidget {
               Container(
                 margin: EdgeInsets.only(top: 10),
                 height: 150,
-                child: CarouselSlider.builder(
-                  itemCount: newsPage.length,
-                  itemBuilder: (context, index, realIndex) {
-                    return GestureDetector(
-                      onTap: () {
-                        if (index >= 0 && index < newsPage.length) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => newsPage[index],
-                            ),
-                          );
-                        }
-                      },
-                      child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: (1)),
-                        width: 200,
-                        decoration: BoxDecoration(
-                          color: Color.fromRGBO(251, 241, 221, 50),
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
-                              blurRadius: 4.0,
-                              spreadRadius: 0.05,
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset(
-                              "assets/images/${imgList[index]}",
-                              width: 150,
-                              height: 90,
-                            ),
-                            const SizedBox(height: 15),
-                            Text(
-                              "${textList[index]}",
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 12,
+                child: articles.isEmpty
+                    ? Center(child: CircularProgressIndicator())
+                    : CarouselSlider.builder(
+                        itemCount: articles.length,
+                        itemBuilder: (context, index, realIndex) {
+                          final article = articles[index];
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DetailArticlePage(article: article),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              margin: EdgeInsets.symmetric(horizontal: (1)),
+                              width: 200,
+                              decoration: BoxDecoration(
+                                color: Color.fromRGBO(251, 241, 221, 50),
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.1),
+                                    blurRadius: 4.0,
+                                    spreadRadius: 0.05,
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Image.network(
+                                    article.image,
+                                    width: 150,
+                                    height: 90,
+                                  ),
+                                  const SizedBox(height: 15),
+                                  Text(
+                                    article.nameArticle,
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          ],
+                          );
+                        },
+                        options: CarouselOptions(
+                          height: 200,
+                          aspectRatio: 16 / 9,
+                          viewportFraction: 0.4,
+                          initialPage: 0,
+                          enableInfiniteScroll: true,
+                          reverse: false,
+                          autoPlay: true,
+                          autoPlayInterval: Duration(seconds: 3),
+                          autoPlayAnimationDuration: Duration(milliseconds: 800),
+                          autoPlayCurve: Curves.fastOutSlowIn,
+                          enlargeCenterPage: true,
+                          scrollDirection: Axis.horizontal,
                         ),
                       ),
-                    );
-                  },
-                  options: CarouselOptions(
-                    height: 200,
-                    aspectRatio: 16 / 9,
-                    viewportFraction: 0.4,
-                    initialPage: 0,
-                    enableInfiniteScroll: true,
-                    reverse: false,
-                    autoPlay: true,
-                    autoPlayInterval: Duration(seconds: 3),
-                    autoPlayAnimationDuration: Duration(milliseconds: 800),
-                    autoPlayCurve: Curves.fastOutSlowIn,
-                    enlargeCenterPage: true,
-                    scrollDirection: Axis.horizontal,
-                  ),
-                ),
               ),
             ],
           ),

@@ -10,24 +10,25 @@ class Articles with ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
 
-  Future<List<Artikel>> getArticles() async {
-    List<Artikel> articles = [];
-    try {
-      QuerySnapshot querySnapshot =
-          await _firestore.collection('articles').get();
-      querySnapshot.docs.forEach((doc) {
-        articles.add(Artikel(
-          nameArticle: doc['nameArticle'],
-          image: doc['image'],
-          description: doc['description'],
-        ));
-      });
-      return articles;
-    } catch (error) {
-      print('Error getting articles: $error');
-      return [];
-    }
+Future<List<Artikel>> getArticles() async {
+  List<Artikel> articles = [];
+  try {
+    QuerySnapshot querySnapshot = await _firestore.collection('articles').get();
+    querySnapshot.docs.forEach((doc) {
+      final data = doc.data() as Map<String, dynamic>;
+      articles.add(Artikel(
+        nameArticle: data['nameArticle'],
+        image: data['image'],
+        description: data['description'],
+      ));
+    });
+    return articles;
+  } catch (error) {
+    print('Error getting articles: $error');
+    return [];
   }
+}
+
 
   Future<void> addArticle(
     String nameArticle,
