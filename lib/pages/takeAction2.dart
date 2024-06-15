@@ -1,5 +1,5 @@
 import 'package:education_app/widgets/custom_icon_bottom.dart';
-import 'package:education_app/widgets/enroll_bottom_sheet.dart.dart';
+import 'package:education_app/widgets/enroll_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

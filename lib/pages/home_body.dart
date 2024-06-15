@@ -1,24 +1,21 @@
+import 'package:education_app/models/vol_article.dart';
+import 'package:education_app/pages/detail_vol_articles.dart';
+import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:education_app/models/category.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:education_app/models/edu_article.dart';
-import 'package:education_app/pages/add_don_article.dart';
 import 'package:education_app/pages/add_edu_article.dart';
 import 'package:education_app/pages/add_vol_article.dart';
-import 'package:education_app/pages/climatechange.dart';
-import 'package:education_app/pages/deforestation.dart';
+import 'package:education_app/pages/add_don_article.dart';
 import 'package:education_app/pages/detail_article.dart';
-import 'package:education_app/pages/flood.dart';
-import 'package:education_app/pages/foodwaste.dart';
 import 'package:education_app/pages/takeAction1.dart';
 import 'package:education_app/pages/takeAction2.dart';
 import 'package:education_app/pages/takeAction3.dart';
 import 'package:education_app/pages/takeAction4.dart';
 import 'package:education_app/pages/takeAction5.dart';
-import 'package:education_app/pages/textilewaste.dart';
-import 'package:education_app/pages/waste.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+import 'package:education_app/models/category.dart';
+import 'package:education_app/pages/detail_vol_articles.dart';
 
 class HomeBody extends StatefulWidget {
   HomeBody({Key? key}) : super(key: key);
@@ -29,65 +26,37 @@ class HomeBody extends StatefulWidget {
 
 class _HomeBodyState extends State<HomeBody> {
   List<Artikel> articles = [];
+  List<ArtikelVolunteer> volunteerArticles = [];
 
   @override
   void initState() {
     super.initState();
     fetchArticles();
+    fetchVolunteerArticles();
   }
 
   Future<void> fetchArticles() async {
-    final snapshot = await FirebaseFirestore.instance.collection('articles').get();
+    final snapshot =
+        await FirebaseFirestore.instance.collection('articles').get();
     setState(() {
-      articles = snapshot.docs.map((doc) => Artikel.fromFirestore(doc)).toList();
+      articles =
+          snapshot.docs.map((doc) => Artikel.fromFirestore(doc)).toList();
     });
   }
 
-  List<Widget> gridPage = [
-    TakeAction1Page(
-      title: '',
-    ),
-    TakeAction2Page(
-      title: '',
-    ),
-    TakeAction3Page(
-      title: '',
-    ),
-    TakeAction4Page(
-      title: '',
-    ),
-    TakeAction5Page(
-      title: '',
-    ),
-  ];
-
-  List<Category> categoryList = [
-    Category(
-      name: 'Deforestation',
-      noOfVolunteers: 55,
-      thumbnail: 'assets/images/deforestation_action.jpg',
-    ),
-    Category(
-      name: 'Flood',
-      noOfVolunteers: 20,
-      thumbnail: 'assets/images/flood_action.jpg',
-    ),
-    Category(
-      name: 'Clean Water Crisis',
-      noOfVolunteers: 16,
-      thumbnail: 'assets/images/watercrisis_action.jpg',
-    ),
-    Category(
-      name: 'Waste Accumulation',
-      noOfVolunteers: 25,
-      thumbnail: 'assets/images/waste_action.jpg',
-    ),
-    Category(
-      name: 'Preserving marine',
-      noOfVolunteers: 25,
-      thumbnail: 'assets/images/marine_action.jpg',
-    ),
-  ];
+  Future<void> fetchVolunteerArticles() async {
+    final snapshot =
+        await FirebaseFirestore.instance.collection('vol_articles').get();
+    setState(() {
+      volunteerArticles = snapshot.docs
+          .map((doc) => ArtikelVolunteer(
+                nameArticle: doc['nameArticle'],
+                image: doc['image'],
+                description: doc['description'],
+              ))
+          .toList();
+    });
+  }
 
   void _showArticleTypeDialog(BuildContext context) {
     showDialog(
@@ -108,7 +77,7 @@ class _HomeBodyState extends State<HomeBody> {
             child: Container(
               padding: EdgeInsets.all(15),
               decoration: const BoxDecoration(
-                color: Color.fromRGBO(10, 99, 61, 50),
+                color: Color.fromRGBO(10, 99, 61, 1),
               ),
               child: const Text(
                 'Pilih Jenis Artikel',
@@ -120,7 +89,7 @@ class _HomeBodyState extends State<HomeBody> {
           ),
           content: Container(
             decoration: const BoxDecoration(
-              color: Color.fromRGBO(251, 241, 221, 50),
+              color: Color.fromRGBO(251, 241, 221, 1),
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -167,7 +136,7 @@ class _HomeBodyState extends State<HomeBody> {
           actions: [
             Container(
               decoration: const BoxDecoration(
-                color: Color.fromRGBO(251, 241, 221, 50),
+                color: Color.fromRGBO(251, 241, 221, 1),
                 borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(20),
                   bottomRight: Radius.circular(20),
@@ -177,7 +146,8 @@ class _HomeBodyState extends State<HomeBody> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   TextButton(
-                    child: const Text('Batal', style: TextStyle(color: Colors.black)),
+                    child: const Text('Batal',
+                        style: TextStyle(color: Colors.black)),
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
@@ -191,17 +161,13 @@ class _HomeBodyState extends State<HomeBody> {
     );
   }
 
-  // future to fetch user details
   Future<DocumentSnapshot<Map<String, dynamic>>> getUserDetails() async {
-    final currentUser
- = FirebaseAuth.instance.currentUser;
+    final currentUser = FirebaseAuth.instance.currentUser;
     return await FirebaseFirestore.instance
         .collection("users")
         .doc(currentUser!.email)
         .get();
   }
-
-  int _currentIndexDetails = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -219,8 +185,8 @@ class _HomeBodyState extends State<HomeBody> {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomLeft,
                 colors: [
-                  Color.fromRGBO(10, 99, 61, 50),
-                  Color.fromRGBO(78, 138, 103, 50),
+                  Color.fromRGBO(10, 99, 61, 1),
+                  Color.fromRGBO(78, 138, 103, 1),
                 ],
               ),
             ),
@@ -233,13 +199,16 @@ class _HomeBodyState extends State<HomeBody> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        margin: EdgeInsets.only(left: 180),
-                        child: const Text(
-                          "EcoAction",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, color: Colors.white),
+                      Flexible(
+                        child: Container(
+                          margin: EdgeInsets.only(left: 180),
+                          child: const Text(
+                            "EcoAction",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
+                          ),
                         ),
                       ),
                     ],
@@ -255,8 +224,8 @@ class _HomeBodyState extends State<HomeBody> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text("Good Morning,",
-                              style:
-                                  TextStyle(fontSize: 12, color: Colors.white)),
+                              style: TextStyle(
+                                  fontSize: 12, color: Colors.white)),
                           FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
                             future: getUserDetails(),
                             builder: (context, snapshot) => Text(
@@ -287,65 +256,72 @@ class _HomeBodyState extends State<HomeBody> {
                 child: const Text(
                   "What's New?",
                   style: TextStyle(
-                    color: Color.fromRGBO(10, 99, 61, 50),
+                    color: Color.fromRGBO(10, 99, 61, 1),
                     fontSize: 20,
                   ),
                 ),
               ),
               Container(
                 margin: EdgeInsets.only(top: 10),
-                height: 150,
+                height: 200,  // Adjusted the height to accommodate larger content
                 child: articles.isEmpty
                     ? Center(child: CircularProgressIndicator())
                     : CarouselSlider.builder(
                         itemCount: articles.length,
-                        itemBuilder: (context, index, realIndex) {
-                          final article = articles[index];
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => DetailArticlePage(article: article),
+                        itemBuilder: (BuildContext context, int index,
+                                int pageViewIndex) =>
+                            GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    DetailArticlePage(article: articles[index]),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            margin: EdgeInsets.symmetric(horizontal: 5),
+                            decoration: BoxDecoration(
+                              color: Color.fromRGBO(251, 241, 221, 1),
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.1),
+                                  blurRadius: 4,
+                                  spreadRadius: 0.05,
                                 ),
-                              );
-                            },
-                            child: Container(
-                              margin: EdgeInsets.symmetric(horizontal: (1)),
-                              width: 200,
-                              decoration: BoxDecoration(
-                                color: Color.fromRGBO(251, 241, 221, 50),
-                                borderRadius: BorderRadius.circular(10),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.1),
-                                    blurRadius: 4.0,
-                                    spreadRadius: 0.05,
-                                  ),
-                                ],
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Image.network(
-                                    article.image,
-                                    width: 150,
-                                    height: 90,
-                                  ),
-                                  const SizedBox(height: 15),
-                                  Text(
-                                    article.nameArticle,
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ],
-                              ),
+                              ],
                             ),
-                          );
-                        },
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.network(
+                                  articles[index].image,
+                                  width: 150,
+                                  height: 90,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    print('Error loading image: $error');
+                                    return Placeholder(
+                                      fallbackHeight: 90,
+                                      fallbackWidth: 150,
+                                    );
+                                  },
+                                ),
+                                const SizedBox(height: 15),
+                                Text(
+                                  articles[index].nameArticle,
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                         options: CarouselOptions(
                           height: 200,
                           aspectRatio: 16 / 9,
@@ -374,109 +350,121 @@ class _HomeBodyState extends State<HomeBody> {
                   children: [
                     Text(
                       "More Ways You Can Help",
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: Color.fromRGBO(10, 99, 61, 50),
+                      style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                            color: Color.fromRGBO(10, 99, 61, 1),
                           ),
                     ),
                     TextButton(
                       onPressed: () {},
                       child: Text(
                         "See All",
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Color.fromRGBO(10, 99, 61, 50),
+                        style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                              color: Color.fromRGBO(10, 99, 61, 1),
                             ),
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
-              GridView.builder(
-                shrinkWrap: true,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 8,
-                ),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 0.8,
-                  crossAxisSpacing: 20,
-                  mainAxisSpacing: 24,
-                ),
-                itemBuilder: (context, index) {
-                  return CategoryCard(
-                    details: gridPage[index],
-                    category: categoryList[index],
-                  );
-                },
-                itemCount: categoryList.length,
+              SizedBox(height: 30), // Adjust this height as needed
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: volunteerArticles.isEmpty
+                    ? const Center(child: CircularProgressIndicator())
+                    : GridView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 0.75,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                        ),
+                        itemCount: volunteerArticles.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final article = volunteerArticles[index];
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      VolunteerArticleDetailPage(
+                                    title: article.nameArticle,
+                                    image: article.image,
+                                    description: article.description,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Color.fromRGBO(251, 241, 221, 1),
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.1),
+                                    blurRadius: 4,
+                                    spreadRadius: 0.05,
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: const BorderRadius.vertical(
+                                      top: Radius.circular(10),
+                                    ),
+                                    child: Image.network(
+                                      article.image,
+                                      height: 120,
+                                      width: double.infinity,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (context, error, stackTrace) {
+                                        return Container(
+                                          height: 120,
+                                          color: Colors.grey,
+                                          child: const Center(
+                                            child: Icon(
+                                              Icons.image,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      article.nameArticle,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14,
+                                      ),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
               ),
             ],
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Color.fromRGBO(78, 138, 103, 50),
-        splashColor: Color.fromRGBO(78, 138, 103, 50),
+        backgroundColor: Color.fromRGBO(78, 138, 103, 1),
+        splashColor: Color.fromRGBO(78, 138, 103, 1),
         onPressed: () {
           _showArticleTypeDialog(context);
         },
         child: Icon(Icons.edit, color: Colors.white),
-      ),
-    );
-  }
-}
-
-class CategoryCard extends StatelessWidget {
-  final Category category;
-  final Widget details;
-
-  const CategoryCard({
-    Key? key,
-    required this.details,
-    required this.category,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => this.details,
-        ),
-      ),
-      child: Container(
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: Color.fromRGBO(251, 241, 221, 50),
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(.1),
-              blurRadius: 4.0,
-              spreadRadius: .05,
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Align(
-              alignment: Alignment.topRight,
-              child: Image.asset(
-                category.thumbnail,
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Text(category.name),
-            Text(
-              "${category.noOfVolunteers.toString()} have joined",
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-          ],
-        ),
       ),
     );
   }

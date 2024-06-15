@@ -1,49 +1,25 @@
-import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:education_app/models/edu_article.dart'; 
+import '../models/edu_article.dart';
 
 class Articles with ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
 
-Future<List<Artikel>> getArticles() async {
-  List<Artikel> articles = [];
-  try {
-    QuerySnapshot querySnapshot = await _firestore.collection('articles').get();
-    querySnapshot.docs.forEach((doc) {
-      final data = doc.data() as Map<String, dynamic>;
-      articles.add(Artikel(
-        nameArticle: data['nameArticle'],
-        image: data['image'],
-        description: data['description'],
-      ));
-    });
-    return articles;
-  } catch (error) {
-    print('Error getting articles: $error');
-    return [];
-  }
-}
-
-
   Future<void> addArticle(
-    String nameArticle,
-    String image,
-    String description,
-  ) async {
+      String nameArticle, String imageUrl, String description) async {
     try {
       await _firestore.collection('articles').add({
         'nameArticle': nameArticle,
-        'image': image,
+        'image': imageUrl,
         'description': description,
       });
       notifyListeners();
     } catch (error) {
       print('Error adding article: $error');
+      throw error;
     }
   }
 
@@ -53,11 +29,31 @@ Future<List<Artikel>> getArticles() async {
       Reference reference = _storage.ref().child('images/$fileName');
       UploadTask uploadTask = reference.putData(imageData);
       TaskSnapshot snapshot = await uploadTask;
+
+      // Dapatkan URL download yang bisa diakses secara publik
       String downloadUrl = await snapshot.ref.getDownloadURL();
-      return downloadUrl;
+
+      // Ubah URL menjadi bentuk umum yang tidak mengandung unsur Firebase Storage
+      Uri uri = Uri.parse(downloadUrl);
+      String generalUrl = '${uri.scheme}://${uri.host}${uri.path}?alt=media';
+
+      return generalUrl;
     } catch (error) {
       print('Error uploading image: $error');
       throw error;
+    }
+  }
+
+  Future<List<Artikel>> getArticles() async {
+    try {
+      QuerySnapshot querySnapshot =
+          await _firestore.collection('articles').get();
+      return querySnapshot.docs
+          .map((doc) => Artikel.fromFirestore(doc))
+          .toList();
+    } catch (error) {
+      print('Error getting articles: $error');
+      return [];
     }
   }
 }

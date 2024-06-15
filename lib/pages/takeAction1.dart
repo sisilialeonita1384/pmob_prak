@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../widgets/custom_icon_bottom.dart';
-import '../widgets/enroll_bottom_sheet.dart.dart';
+import '../widgets/enroll_bottom_sheet.dart';
 
 
 class TakeAction1Page extends StatefulWidget {

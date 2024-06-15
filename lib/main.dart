@@ -1,7 +1,10 @@
 import 'package:education_app/firebase_options.dart';
+import 'package:education_app/pages/add_don_article.dart';
+import 'package:education_app/pages/add_vol_article.dart';
 import 'package:education_app/pages/climatechange.dart';
 import 'package:education_app/pages/deforestation.dart';
 import 'package:education_app/pages/donate.dart';
+import 'package:education_app/pages/donate.dart'; // Tambahkan import ini
 import 'package:education_app/pages/flood.dart';
 import 'package:education_app/pages/foodwaste.dart';
 import 'package:education_app/pages/formdonate.dart';
@@ -38,10 +41,12 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => Articles()),
         ChangeNotifierProvider(
-            create: (_) => VolunteerArticles(), child: VolunteerFormPage()),
+          create: (context) => VolunteerArticles(),
+          child: AddVolunteerArticlePage(),
+        ),
         ChangeNotifierProvider(
-          create: (_) => DonationArticles(),
-          child: DonateFormPage(),
+          create: (context) => DonationArticles(),
+          child: AddDonationArticlePage(),
         ),
       ],
       child: MaterialApp(
@@ -81,8 +86,9 @@ class MyApp extends StatelessWidget {
           "/flood": (context) => FloodPage(),
           "/waste": (context) => WastePage(),
           "/foodwaste": (context) => FoodWastePage(),
-          "/profile": (context) => ProfilePage(userData: {},),
-          "/donate": (context) => DonatePage(),
+          // "/profile": (context) => ProfilePage(),
+          "/donate": (context) => DonationPage(),
+          "/donation": (context) => DonationPage(), // Tambahkan route ini
           "/take1": (context) => TakeAction1Page(title: ''),
         },
         initialRoute: "/splash",

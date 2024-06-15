@@ -19,8 +19,8 @@ class _HomePageState extends State<HomePage> {
   List<Widget> pages = [
     HomeBody(),
     HistoryPage(),
-    DonatePage(),
-    ProfilePage(userData: {},)
+    DonationPage(),
+    ProfilePage()
   ];
   
   @override
