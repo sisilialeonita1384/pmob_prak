@@ -1,56 +1,94 @@
+import 'package:education_app/widgets/enroll_bottom_sheet.dart';
 import 'package:flutter/material.dart';
-import 'package:education_app/models/don_article.dart';
+import 'package:flutter/services.dart';
 
-class DonationArticlesPage extends StatelessWidget {
-  final ArtikelDonasi article;
+class DonationArticleDetailPage extends StatelessWidget {
+  final String title;
+  final String image;
+  final String description;
 
-  DonationArticlesPage({required this.article});
+  const DonationArticleDetailPage({
+    Key? key,
+    required this.title,
+    required this.image,
+    required this.description,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(article.nameArticle),
-        backgroundColor: Colors.transparent,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomLeft,
-              colors: [
-                Color.fromRGBO(10, 99, 61, 50),
-                Color.fromRGBO(78, 138, 103, 50),
-              ],
-            ),
-          ),
-        ),
-      ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: 200,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8.0),
-                image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image: NetworkImage(article.image),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.dark,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Stack(
+                children: [
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 20, left: 45, bottom: 30),
+                      child: Text(
+                        title,
+                        textAlign: TextAlign.start,
+                        style: Theme.of(context)
+                            .textTheme
+                            .displayMedium
+                            ?.copyWith(fontSize: 17),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 20,
+                    left: 0,
+                    child: IconButton(
+                      icon: Icon(Icons.arrow_back),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 40),
+                child: Image.network(image),
+              ),
+              Container(
+                margin: EdgeInsets.all(20),
+                child: const Text(
+                  "Description",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 18,
+                  ),
                 ),
               ),
-            ),
-            SizedBox(height: 16.0),
-            Text(
-              article.nameArticle,
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 16.0),
-            Text(
-              article.description,
-              style: TextStyle(fontSize: 16),
-            ),
-          ],
+              Container(
+                margin: EdgeInsets.only(left: 20, right: 20, bottom: 20),
+                child: Text(
+                  description,
+                  textAlign: TextAlign.justify,
+                  style: TextStyle(fontSize: 14),
+                ),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).viewInsets.bottom,
+              ),
+            ],
+          ),
+        ),
+        bottomSheet: BottomSheet(
+          onClosing: () {},
+          backgroundColor: Colors.white,
+          enableDrag: false,
+          builder: (context) {
+            return const SizedBox(
+              height: 80,
+              child: EnrollBottomSheet(),
+            );
+          },
         ),
       ),
     );

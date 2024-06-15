@@ -88,7 +88,6 @@ class MyApp extends StatelessWidget {
           "/foodwaste": (context) => FoodWastePage(),
           // "/profile": (context) => ProfilePage(),
           "/donate": (context) => DonationPage(),
-          "/donation": (context) => DonationPage(), // Tambahkan route ini
           "/take1": (context) => TakeAction1Page(title: ''),
         },
         initialRoute: "/splash",
