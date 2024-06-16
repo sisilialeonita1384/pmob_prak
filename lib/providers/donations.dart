@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:education_app/models/donation.dart';
 import 'package:flutter/material.dart';
+import '../models/donation.dart';
+import '../models/history_donations.dart';
 
 class Donations with ChangeNotifier {
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -12,38 +13,63 @@ class Donations with ChangeNotifier {
           await _firestore.collection('donations').get();
       querySnapshot.docs.forEach((doc) {
         donations.add(Donation(
-          fullNameDonation: doc['fullNameDonation'],
-          emailDonation: doc['emailDonation'],
-          ageDonation: doc['ageDonation'],
+          fullName: doc['fullName'],
+          email: doc['email'],
+          age: doc['age'],
           payment: doc['payment'],
-          articleTitle: doc['articleTitle']
+          articleTitle: doc['articleTitle'],
         ));
       });
       return donations;
     } catch (error) {
       print('Error getting donations: $error');
-      return []; 
+      return [];
     }
   }
 
   Future<void> addDonation(
-    String fullNameDonation,
-    String emailDonation,
-    String ageDonation,
+    String fullName,
+    String email,
+    String age,
     String payment,
-    String articleTitle
+    String articleTitle,
   ) async {
     try {
       await _firestore.collection('donations').add({
-        'fullNameDonation': fullNameDonation,
-        // 'email': emailDonation,
-        'ageDonation': ageDonation,
+        'fullName': fullName,
+        'email': email,
+        'age': age,
         'payment': payment,
+        'articleTitle': articleTitle,
       });
-      notifyListeners();
+
+      // Save to donation_history
+      final history = DonationHistory(
+        title: articleTitle,
+        registeredAt: DateTime.now(),
+        amount: double.parse(payment),
+        imageUrl: 'image_url_here', // Provide image URL here
+      );
+      await _firestore.collection('donation_history').add(history.toMap());
+
+      notifyListeners(); // Ensure listeners are notified of changes
     } catch (error) {
-      // Handle error
       print('Error adding donation: $error');
     }
   }
+
+  Future<List<DonationHistory>> getDonationHistory() async {
+    try {
+      final snapshot = await _firestore.collection('donation_history').get();
+      return snapshot.docs
+          .map((doc) => DonationHistory.fromMap(doc.data()))
+          .toList();
+    } catch (error) {
+      print('Error getting donation history: $error');
+      return [];
+    }
+  }
+  getDonationArticles() {}
 }
+
+

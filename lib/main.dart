@@ -12,8 +12,10 @@ import 'package:education_app/pages/sign-up.dart';
 import 'package:education_app/pages/splashscreen.dart';
 import 'package:education_app/pages/waste.dart';
 import 'package:education_app/providers/don_articles.dart';
+import 'package:education_app/providers/donations.dart';
 import 'package:education_app/providers/edu_articles.dart';
 import 'package:education_app/providers/vol_articles.dart';
+import 'package:education_app/providers/volunteers.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -42,6 +44,8 @@ class MyApp extends StatelessWidget {
           create: (context) => DonationArticles(),
           child: AddDonationArticlePage(),
         ),
+         ChangeNotifierProvider(create: (_) => Volunteers()),
+         ChangeNotifierProvider(create: (_) => Donations()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

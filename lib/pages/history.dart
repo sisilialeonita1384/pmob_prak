@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:education_app/providers/volunteers_display.dart';
 import 'package:provider/provider.dart';
-
+import '../providers/volunteers.dart';
+import '../providers/donations.dart';
+import '../models/history_volunteers.dart';
+import '../models/history_donations.dart';
 
 class HistoryPage extends StatefulWidget {
-  const HistoryPage({super.key});
+  const HistoryPage({Key? key}) : super(key: key);
 
   @override
-  State<HistoryPage> createState() => _HistoryPageState();
+  _HistoryPageState createState() => _HistoryPageState();
 }
 
 class _HistoryPageState extends State<HistoryPage> {
-  bool _isFirstTabSelected = false;
+  bool _isFirstTabSelected = true;
+  
 
   @override
   Widget build(BuildContext context) {
-    // final dataDisplayVolunteers = Provider.of<VolunteerDisplayProvider>(context).VolunteerDisplayItem;
+    final volunteersProvider = Provider.of<Volunteers>(context);
+    final donationsProvider = Provider.of<Donations>(context);
+
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(120.0),
@@ -126,17 +131,36 @@ class _HistoryPageState extends State<HistoryPage> {
       body: IndexedStack(
         index: _isFirstTabSelected ? 0 : 1,
         children: [
-          Center(
-            child: Container(
-              margin: EdgeInsets.only(top: 20, left: 15, right: 15, bottom: 20),
-              child: ListView.builder(
-                itemCount: _volunteerDisplay.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final item = _volunteerDisplay[index];
+          _buildVolunteerHistoryWidget(volunteersProvider),
+          _buildDonationHistoryWidget(donationsProvider),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildVolunteerHistoryWidget(Volunteers volunteersProvider) {
+    return Center(
+      child: Container(
+        margin: const EdgeInsets.all(20),
+        child: FutureBuilder<List<VolunteerHistory>>(
+          future: volunteersProvider.getVolunteerHistory(),
+          builder: (context, snapshot) {
+            print('Snapshot connection state: ${snapshot.connectionState}');
+
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return const Center(child: Text('No volunteer history found.'));
+            } else {
+              return ListView.builder(
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) {
+                  final item = snapshot.data![index];
                   return Container(
                     height: 136,
-                    margin: const EdgeInsets.symmetric(
-                        horizontal: 0.1, vertical: 8.0),
+                    margin: const EdgeInsets.symmetric(vertical: 8.0),
                     decoration: BoxDecoration(
                       color: Color.fromRGBO(78, 138, 103, 50),
                       borderRadius: BorderRadius.circular(10),
@@ -148,212 +172,154 @@ class _HistoryPageState extends State<HistoryPage> {
                         ),
                       ],
                     ),
-                    padding: const EdgeInsets.only(
-                        left: 15, right: 20, bottom: 10, top: 10),
+                    padding: const EdgeInsets.all(10),
                     child: Row(
                       children: [
                         Expanded(
-                            child: Column(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                item.title,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              Text(
+                                item.registeredAt.toString(),
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.white,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              const SizedBox(height: 10),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          width: 100,
+                          height: 100,
+                          decoration: BoxDecoration(
+                            color: Colors.grey,
+                            borderRadius: BorderRadius.circular(8.0),
+                            image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: NetworkImage(item.imageUrl),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              );
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDonationHistoryWidget(Donations donationsProvider) {
+  return Center(
+    child: Container(
+      margin: const EdgeInsets.all(20),
+      child: FutureBuilder<List<DonationHistory>>(
+        future: donationsProvider.getDonationHistory(),
+        builder: (context, snapshot) {
+          print('Snapshot connection state: ${snapshot.connectionState}');
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            print('Error: ${snapshot.error}');
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text('No donation history found.'));
+          } else {
+            return ListView.builder(
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                final item = snapshot.data![index];
+                return Container(
+                  height: 136,
+                  margin: const EdgeInsets.symmetric(vertical: 8.0),
+                  decoration: BoxDecoration(
+                    color: const Color.fromRGBO(251, 241, 221, 50),
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 4,
+                        spreadRadius: 0.5,
+                      ),
+                    ],
+                  ),
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               item.title,
                               style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            Text(
-                              item.postedOn,
-                              style:
-                                  TextStyle(fontSize: 12, color: Colors.white),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            const SizedBox(height: 10),
-                            Row(mainAxisSize: MainAxisSize.min, children: [
-                              Text(
-                                "${item.noOfVolunteersDisplay.toString()} have joined",
-                                style: const TextStyle(
-                                    color: Color.fromRGBO(255, 242, 215, 0.808),
-                                    fontWeight: FontWeight.bold),
+                                fontWeight: FontWeight.bold,
                               ),
-                            ])
-                          ],
-                        )),
-                        Container(
-                            width: 100,
-                            height: 100,
-                            decoration: BoxDecoration(
-                                color: Colors.grey,
-                                borderRadius: BorderRadius.circular(8.0),
-                                image: DecorationImage(
-                                  fit: BoxFit.cover,
-                                  image:
-                                      AssetImage("assets/images/${item.image}"),
-                                ))),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ),
-          ),
-          Center(
-            child: Container(
-              margin: EdgeInsets.only(top: 20, left: 15, right: 15, bottom: 20),
-              child: ListView.builder(
-                itemCount: _donate.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final item = _donate[index];
-                  return Container(
-                    height: 136,
-                    margin: const EdgeInsets.symmetric(
-                        horizontal: 0.1, vertical: 8.0),
-                    decoration: BoxDecoration(
-                      color: const Color.fromRGBO(251, 241, 221, 50),
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 4,
-                          spreadRadius: 0.5,
-                        ),
-                      ],
-                    ),
-                    padding: const EdgeInsets.only(
-                        left: 15, right: 20, bottom: 10, top: 10),
-                    child: Row(
-                      children: [
-                        Expanded(
-                            child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              item.title,
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
                             Text(
-                              item.postedOn,
-                              style: TextStyle(fontSize: 12),
+                              item.registeredAt.toString(),
+                              style: const TextStyle(fontSize: 12),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
                             const SizedBox(height: 10),
-                            Row(mainAxisSize: MainAxisSize.min, children: [
-                              Text(
-                                " Amount: ${item.amount} ",
-                                style: const TextStyle(
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  " Amount: ${item.amount} ",
+                                  style: const TextStyle(
                                     color: Color.fromRGBO(10, 99, 61, 50),
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ])
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ],
-                        )),
-                        Container(
-                            width: 100,
-                            height: 100,
-                            decoration: BoxDecoration(
-                                color: Colors.grey,
-                                borderRadius: BorderRadius.circular(8.0),
-                                image: DecorationImage(
-                                  fit: BoxFit.cover,
-                                  image:
-                                      AssetImage("assets/images/${item.image}"),
-                                ))),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ),
-          ),
-        ],
+                        ),
+                      ),
+                      Container(
+                        width: 100,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          color: Colors.grey,
+                          borderRadius: BorderRadius.circular(8.0),
+                          image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: NetworkImage(item.imageUrl),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            );
+          }
+        },
       ),
-    );
-  }
+    ),
+  );
 }
 
-class VolunteerDisplay {
-  final String title;
-  final String subtitle;
-  final int noOfVolunteersDisplay;
-  final String image;
-  final String postedOn;
-
-  VolunteerDisplay(
-      {required this.title,
-      required this.subtitle,
-      required this.noOfVolunteersDisplay,
-      required this.image,
-      required this.postedOn});
 }
-
-final List<VolunteerDisplay> _volunteerDisplay = [
-  VolunteerDisplay(
-    title:
-        "Engaging Volunteers in the Fight Against Deforestation: Opportunities and Impact",
-    subtitle: 'The feature, which introduced in April as part of Instagram',
-    noOfVolunteersDisplay: 16,
-    image: "deforestation.jpg",
-    postedOn: "Yesterday",
-  ),
-  VolunteerDisplay(
-      title: "Together, We Can Overcome: Aid Flood Victims Today!",
-      subtitle: 'The feature, which introduced in April as part of Instagram',
-      noOfVolunteersDisplay: 37,
-      image: "climatechange.png",
-      postedOn: "4 hours ago"),
-  VolunteerDisplay(
-      title: "Join the Movement: Empower Communities, Transform Lives in the Global Clean Water Crisis!",
-      subtitle: 'The feature, which introduced in April as part of Instagram',
-      noOfVolunteersDisplay: 2,
-      image: "watercrisis_action.jpg",
-      postedOn: "an hour ago"),
-  VolunteerDisplay(
-      title: "Join Volunteer to Help Overcome the Plastic Curse!",
-      subtitle: 'The feature, which introduced in April as part of Instagram',
-      noOfVolunteersDisplay: 19,
-      image: "waste_action.jpg",
-      postedOn: "10 hours ago"),
-  VolunteerDisplay(
-      title: "Join Volunteer to Preserve Marine Environments!",
-      subtitle: 'The feature, which introduced in April as part of Instagram',
-      noOfVolunteersDisplay: 1,
-      image: "marine_action.jpg",
-      postedOn: "47 minutes ago"),
-];
-
-class Donate {
-  final String title;
-  final String amount;
-  final String image;
-  final String postedOn;
-
-  Donate(
-      {required this.title,
-      required this.amount,
-      required this.image,
-      required this.postedOn});
-}
-
-final List<Donate> _donate = [
-  Donate(
-    title:
-        "Planting Hope, Preserving Nature: Donate Rp10,000 to Plant 1 Tree and Change the Future of the Environment!",
-    amount: "Rp 300.000",
-    image: "deforestation.jpg",
-    postedOn: "Yesterday",
-  ),
-  Donate(
-      title: "End Food Waste, Feed Hope: Donate to Sustainable Food Solutions!",
-      amount: "Rp 100.000",
-      image: "foodwaste.jpg",
-      postedOn: "4 hours ago"),
-];

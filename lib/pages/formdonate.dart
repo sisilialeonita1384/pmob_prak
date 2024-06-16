@@ -1,4 +1,5 @@
 import 'package:education_app/models/donation.dart';
+import 'package:education_app/pages/history.dart';
 import 'package:education_app/providers/donations.dart';
 import 'package:flutter/material.dart';
 
@@ -245,7 +246,10 @@ class _DonateFormPageState extends State<DonateFormPage> {
                 SizedBox(height: 20.0),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => HistoryPage()),
+                    );
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(

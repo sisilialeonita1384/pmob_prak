@@ -1,44 +1,36 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'dart:convert';
-
-class Donation with ChangeNotifier {
-  final String fullNameDonation;
-  final String emailDonation;
-  final String ageDonation;
-  final String payment;
-  final String articleTitle;
+class Donation {
+  String fullName;
+  String email;
+  String age;
+  String payment;
+  String articleTitle;
 
   Donation({
-    required this.fullNameDonation,
-    required  this.emailDonation,
-    required this.ageDonation,
+    required this.fullName,
+    required this.email,
+    required this.age,
     required this.payment,
-    required this.articleTitle
+    required this.articleTitle,
   });
 
-  factory Donation.fromfirestore(
-    DocumentSnapshot<Map<String, dynamic>> snapshot,
-    SnapshotOptions? options,
-  ) {
-    final data = snapshot.data();
-    return Donation(
-        fullNameDonation: 'fullNameDonation',
-        emailDonation: 'emailDonation',
-        ageDonation: 'ageDonation',
-        payment: 'payment',
-        articleTitle: 'articleTitle');
-  }
-
-  Map<String, dynamic> tofirestore() {
+  Map<String, dynamic> toMap() {
     return {
-      if (fullNameDonation != null) "fullNameDonation": fullNameDonation,
-      if (emailDonation != null) "emailDonation": emailDonation,
-      if (ageDonation != null) "ageDonation": ageDonation,
-      if (payment != null) "payment": payment,
-      if (articleTitle != null) "articleTitle": articleTitle
+      'fullName': fullName,
+      'email': email,
+      'age': age,
+      'payment': payment,
+      'articleTitle': articleTitle,
     };
   }
 
-  dataDonation() {}
+  // Constructor from Firestore document data
+  factory Donation.fromMap(Map<String, dynamic> map) {
+    return Donation(
+      fullName: map['fullName'] ?? '',
+      email: map['email'] ?? '',
+      age: map['age'] ?? '',
+      payment: map['payment'] ?? '',
+      articleTitle: map['articleTitle'] ?? '',
+    );
+  }
 }

@@ -277,7 +277,7 @@ class _VolunteerFormPageState extends State<VolunteerFormPage> {
                               _selectedProvince as String,
                               _selectedCity as String,
                               reasonController.text,
-                              widget.title, // Tambahkan judul artikel volunteer
+                              widget.title, 
                             );
                             showDialog(
                               context: context,
@@ -312,7 +312,6 @@ class _VolunteerFormPageState extends State<VolunteerFormPage> {
                                         ElevatedButton(
                                           onPressed: () {
                                             Navigator.pop(context);
-                                            Navigator.pop(context);
                                           },
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor:
@@ -322,7 +321,7 @@ class _VolunteerFormPageState extends State<VolunteerFormPage> {
                                                   BorderRadius.circular(20.0),
                                             ),
                                           ),
-                                          child: const Text('OK'),
+                                          child: const Text('OK', style: TextStyle(color: Colors.white),),
                                         ),
                                       ],
                                     ),
