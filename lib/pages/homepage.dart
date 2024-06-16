@@ -41,8 +41,8 @@ class _HomePageState extends State<HomePage> {
             ),
             BottomNavigationBarItem(
               activeIcon: Icon(Icons.group, color:Color.fromARGB(255, 27, 94, 32)),
-              icon: Icon(Icons.group_outlined),
-              label: "Community",
+              icon: Icon(Icons.history),
+              label: "History",
             ),
             BottomNavigationBarItem(
               activeIcon: Icon(Icons.favorite_border, color:Color.fromARGB(255, 27, 94, 32)),

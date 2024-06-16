@@ -16,6 +16,7 @@ class Donations with ChangeNotifier {
           emailDonation: doc['emailDonation'],
           ageDonation: doc['ageDonation'],
           payment: doc['payment'],
+          articleTitle: doc['articleTitle']
         ));
       });
       return donations;
@@ -30,6 +31,7 @@ class Donations with ChangeNotifier {
     String emailDonation,
     String ageDonation,
     String payment,
+    String articleTitle
   ) async {
     try {
       await _firestore.collection('donations').add({

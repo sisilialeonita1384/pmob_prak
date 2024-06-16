@@ -75,9 +75,9 @@ class VolunteerArticleDetailPage extends StatelessWidget {
           backgroundColor: Colors.white,
           enableDrag: false,
           builder: (context) {
-            return const SizedBox(
+            return SizedBox(
               height: 80,
-              child: EnrollBottomSheet(),
+              child: EnrollBottomSheet(title: title), 
             );
           },
         ),

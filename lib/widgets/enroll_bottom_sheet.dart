@@ -1,10 +1,12 @@
 import 'package:education_app/pages/formvolunteer.dart';
 import 'package:flutter/material.dart';
 import 'custom_icon_bottom.dart';
-
+import 'package:education_app/providers/vol_articles.dart';
 
 class EnrollBottomSheet extends StatefulWidget {
-  const EnrollBottomSheet({Key? key}) : super(key: key);
+  final String title; 
+
+  const EnrollBottomSheet({Key? key, required this.title}) : super(key: key);
 
   @override
   _EnrollBottomSheetState createState() => _EnrollBottomSheetState();
@@ -24,7 +26,9 @@ class _EnrollBottomSheetState extends State<EnrollBottomSheet> {
                 // Navigasi ke halaman formulir volunteer
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => VolunteerFormPage()),
+                  MaterialPageRoute(
+                    builder: (context) => VolunteerFormPage(title: widget.title), // Akses widget.title
+                  ),
                 );
               },
               color: const Color.fromRGBO(78, 138, 103, 1),

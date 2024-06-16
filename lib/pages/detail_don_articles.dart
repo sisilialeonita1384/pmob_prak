@@ -1,17 +1,14 @@
-import 'package:education_app/widgets/enroll_bottom_sheet.dart';
+import 'package:education_app/widgets/enroll_bottom_sheet_donate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:education_app/models/don_article.dart';
 
 class DonationArticleDetailPage extends StatelessWidget {
-  final String title;
-  final String image;
-  final String description;
+  final ArtikelDonasi artikel;
 
   const DonationArticleDetailPage({
     Key? key,
-    required this.title,
-    required this.image,
-    required this.description,
+    required this.artikel,
   }) : super(key: key);
 
   @override
@@ -32,7 +29,7 @@ class DonationArticleDetailPage extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.only(top: 20, left: 45, bottom: 30),
                       child: Text(
-                        title,
+                        artikel.nameArticle,
                         textAlign: TextAlign.start,
                         style: Theme.of(context)
                             .textTheme
@@ -53,12 +50,12 @@ class DonationArticleDetailPage extends StatelessWidget {
               ),
               Container(
                 margin: EdgeInsets.only(top: 40),
-                child: Image.network(image),
+                child: Image.network(artikel.image),
               ),
               Container(
                 margin: EdgeInsets.all(20),
                 child: const Text(
-                  "Description",
+                  "Deskripsi",
                   style: TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 18,
@@ -68,7 +65,7 @@ class DonationArticleDetailPage extends StatelessWidget {
               Container(
                 margin: EdgeInsets.only(left: 20, right: 20, bottom: 20),
                 child: Text(
-                  description,
+                  artikel.description,
                   textAlign: TextAlign.justify,
                   style: TextStyle(fontSize: 14),
                 ),
@@ -84,9 +81,9 @@ class DonationArticleDetailPage extends StatelessWidget {
           backgroundColor: Colors.white,
           enableDrag: false,
           builder: (context) {
-            return const SizedBox(
+            return SizedBox(
               height: 80,
-              child: EnrollBottomSheet(),
+              child: EnrollBottomSheetDonate(title: artikel.nameArticle),
             );
           },
         ),

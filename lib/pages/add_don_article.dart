@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:education_app/pages/donate.dart';
 import 'package:education_app/providers/don_articles.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -15,7 +16,8 @@ class AddDonationArticlePage extends StatefulWidget {
 class _AddDonationArticlePageState extends State<AddDonationArticlePage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController nameArticleController = TextEditingController();
-  final TextEditingController descriptionArticleController = TextEditingController();
+  final TextEditingController descriptionArticleController =
+      TextEditingController();
   Uint8List? _image;
 
   void selectImage() async {
@@ -34,7 +36,8 @@ class _AddDonationArticlePageState extends State<AddDonationArticlePage> {
         inputDecorationTheme: InputDecorationTheme(
           filled: true,
           fillColor: Color.fromRGBO(10, 99, 61, 50),
-          contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
+          contentPadding:
+              EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(20.0),
             borderSide: BorderSide.none,
@@ -85,160 +88,170 @@ class _AddDonationArticlePageState extends State<AddDonationArticlePage> {
         ),
         backgroundColor: Color.fromRGBO(251, 241, 221, 50),
         body: Container(
-        margin: EdgeInsets.only(top: 20.0),
-        padding: const EdgeInsets.all(20.0),
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            children: [
-              _buildShadowedTextField(
-                controller: nameArticleController,
-                labelText: 'Title',
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter the title of your article';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 30.0),
-              _buildShadowedTextField(
-                controller: descriptionArticleController,
-                labelText: 'Description',
-                maxLines: 4,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter the description';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 30.0),
-              _image != null
-                  ? Container(
-                      height: 200,
-                      width: 200,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: MemoryImage(_image!),
-                          fit: BoxFit.cover,
+          margin: EdgeInsets.only(top: 20.0),
+          padding: const EdgeInsets.all(20.0),
+          child: Form(
+            key: _formKey,
+            child: ListView(
+              children: [
+                _buildShadowedTextField(
+                  controller: nameArticleController,
+                  labelText: 'Title',
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter the title of your article';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 30.0),
+                _buildShadowedTextField(
+                  controller: descriptionArticleController,
+                  labelText: 'Description',
+                  maxLines: 4,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter the description';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 30.0),
+                _image != null
+                    ? Container(
+                        height: 200,
+                        width: 200,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: MemoryImage(_image!),
+                            fit: BoxFit.cover,
+                          ),
                         ),
-                      ),
-                    )
-                  : SizedBox.shrink(),
-              SizedBox(height: 10),
-              _buildImageButton(),
-              SizedBox(height: 45.0),
-              ElevatedButton(
-                onPressed: () async {
-                  if (_formKey.currentState?.validate() ?? false) {
-                    if (_image != null) {
-                      try {
-                        // Upload image first to get the URL
-                        String imageUrl = await Provider.of<DonationArticles>(context, listen: false)
-                            .uploadImage(_image!);
+                      )
+                    : SizedBox.shrink(),
+                SizedBox(height: 10),
+                _buildImageButton(),
+                SizedBox(height: 45.0),
+                ElevatedButton(
+                  onPressed: () async {
+                    if (_formKey.currentState?.validate() ?? false) {
+                      if (_image != null) {
+                        try {
+                          // Upload image first to get the URL
+                          String imageUrl = await Provider.of<DonationArticles>(
+                                  context,
+                                  listen: false)
+                              .uploadImage(_image!);
 
-                        // Add article to Firestore with image URL
-                        await Provider.of<DonationArticles>(context, listen: false)
-                            .addArticle(
-                          nameArticleController.text,
-                          imageUrl,
-                          descriptionArticleController.text,
-                        );
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return Dialog(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20.0),
-                              ),
-                              child: Container(
-                                padding: EdgeInsets.all(20.0),
-                                decoration: BoxDecoration(
-                                  color: Color.fromRGBO(251, 241, 221, 50),
+                          // Add article to Firestore with image URL
+                          await Provider.of<DonationArticles>(context,
+                                  listen: false)
+                              .addArticle(
+                            nameArticleController.text,
+                            imageUrl,
+                            descriptionArticleController.text,
+                          );
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return Dialog(
+                                shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(20.0),
                                 ),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const Icon(
-                                      Icons.check_circle,
-                                      color: Color.fromRGBO(10, 99, 61, 50),
-                                      size: 100,
-                                    ),
-                                    SizedBox(height: 20.0),
-                                    const Text(
-                                      'Article is Posted!',
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 18.0),
-                                    ),
-                                    SizedBox(height: 20.0),
-                                    const Text(
-                                      'Your article has been successfully posted. Thank you for sharing your insights with the community!',
-                                      style: TextStyle(color: Colors.black),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                    SizedBox(height: 20.0),
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      style: ButtonStyle(
-                                        backgroundColor: MaterialStateProperty.all(
-                                          Color.fromRGBO(10, 99, 61, 50),
+                                child: Container(
+                                  padding: EdgeInsets.all(20.0),
+                                  decoration: BoxDecoration(
+                                    color: Color.fromRGBO(251, 241, 221, 50),
+                                    borderRadius: BorderRadius.circular(20.0),
+                                  ),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Icon(
+                                        Icons.check_circle,
+                                        color: Color.fromRGBO(10, 99, 61, 50),
+                                        size: 100,
+                                      ),
+                                      SizedBox(height: 20.0),
+                                      const Text(
+                                        'Article is Posted!',
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18.0),
+                                      ),
+                                      SizedBox(height: 20.0),
+                                      const Text(
+                                        'Your article has been successfully posted. Thank you for sharing your insights with the community!',
+                                        style: TextStyle(color: Colors.black),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      SizedBox(height: 20.0),
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  DonationPage(),
+                                            ),
+                                          );
+                                        },
+                                        style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                            Color.fromRGBO(10, 99, 61, 50),
+                                          ),
+                                        ),
+                                        child: const Text(
+                                          'OK',
+                                          style: TextStyle(color: Colors.white),
                                         ),
                                       ),
-                                      child: const Text(
-                                        'OK',
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
-                        );
-                        print("Added Article Data to Firestore");
-                      } catch (error) {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text("Error"),
-                              content: Text("Error creating article $error"),
-                              actions: [
-                                TextButton(
-                                  child: Text("OK"),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        );
+                              );
+                            },
+                          );
+                          print("Added Article Data to Firestore");
+                        } catch (error) {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text("Error"),
+                                content: Text("Error creating article $error"),
+                                actions: [
+                                  TextButton(
+                                    child: Text("OK"),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        }
+                      } else {
+                        print("Please select an image");
                       }
-                    } else {
-                      print("Please select an image");
                     }
-                  }
-                },
-                child: Text('Submit', style: TextStyle(color: Colors.white)),
-                style: const ButtonStyle(
-                  fixedSize: MaterialStatePropertyAll(Size(130, 0)),
-                  backgroundColor: MaterialStatePropertyAll(
-                      Color.fromRGBO(78, 138, 103, 50)),
-                  overlayColor: MaterialStatePropertyAll(
-                      Color.fromRGBO(78, 138, 103, 50)),
+                  },
+                  child: Text('Submit', style: TextStyle(color: Colors.white)),
+                  style: const ButtonStyle(
+                    fixedSize: MaterialStatePropertyAll(Size(130, 0)),
+                    backgroundColor: MaterialStatePropertyAll(
+                        Color.fromRGBO(78, 138, 103, 50)),
+                    overlayColor: MaterialStatePropertyAll(
+                        Color.fromRGBO(78, 138, 103, 50)),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-      ),
       ),
     );
   }

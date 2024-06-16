@@ -3,7 +3,9 @@ import 'package:education_app/providers/donations.dart';
 import 'package:flutter/material.dart';
 
 class DonateFormPage extends StatefulWidget {
-  const DonateFormPage({Key? key}) : super(key: key);
+  final String title;
+
+  const DonateFormPage({Key? key, required this.title}) : super(key: key);
 
   @override
   _DonateFormPageState createState() => _DonateFormPageState();
@@ -12,10 +14,12 @@ class DonateFormPage extends StatefulWidget {
 class _DonateFormPageState extends State<DonateFormPage> {
   final Donations controller = Donations();
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController fullNameDonationController = TextEditingController();
-    final TextEditingController emailDonationController = TextEditingController();
+  final TextEditingController fullNameDonationController =
+      TextEditingController();
+  final TextEditingController emailDonationController = TextEditingController();
   final TextEditingController ageDonationController = TextEditingController();
   final TextEditingController paymentController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -83,6 +87,16 @@ class _DonateFormPageState extends State<DonateFormPage> {
             key: _formKey,
             child: ListView(
               children: [
+                Text(
+                  widget.title,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Color.fromRGBO(10, 99, 61, 50),
+                  ),
+                  textAlign: TextAlign.start,
+                ),
+                SizedBox(height: 30.0),
                 _buildShadowedTextField(
                   controller: fullNameDonationController,
                   labelText: 'Full Name',
@@ -121,41 +135,20 @@ class _DonateFormPageState extends State<DonateFormPage> {
                 SizedBox(height: 45.0),
                 ElevatedButton(
                   onPressed: () async {
-                    // Ganti dengan nilai yang sesuai, bisa didapatkan dari input pengguna atau sumber lain
-                    // String fullName = "John Doe";
-                    // String age = "30";
-                    // String province = "Jakarta";
-                    // String city = "Jakarta Utara";
-                    // String reason = "Volunteering to help others";
-
-                    try {
-                      await Donations().addDonation(
+                    if (_formKey.currentState!.validate()) {
+                      try {
+                        await controller.addDonation(
                           fullNameDonationController.text,
                           emailDonationController.text,
                           ageDonationController.text,
-                          paymentController.text);
-                      showSuccessDialog(context);
-                      print("Added Volunteer Data to Firestore");
-                    } catch (error) {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text("Error"),
-                            content: Text(
-                                "Error mendaftar volunteer $error"), //ya isi sendiri lah apa isinya, yg sukses jg sesuaiin aja sendiri
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text("OK"),
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                      print("Error adding volunteer data to Firestore: $error");
+                          paymentController.text,
+                          widget.title,
+                        );
+                        showSuccessDialog(context);
+                        print("Added Donation Data to Firestore");
+                      } catch (error) {
+                        showErrorDialog(context, error);
+                      }
                     }
                   },
                   style: ButtonStyle(
@@ -270,8 +263,24 @@ class _DonateFormPageState extends State<DonateFormPage> {
       },
     );
   }
-}
 
-void main() {
-  runApp(DonateFormPage());
+  void showErrorDialog(BuildContext context, error) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Error"),
+          content: Text("Error mendaftar donasi: $error"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("OK"),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }

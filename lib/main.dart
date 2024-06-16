@@ -3,19 +3,13 @@ import 'package:education_app/pages/add_don_article.dart';
 import 'package:education_app/pages/add_vol_article.dart';
 import 'package:education_app/pages/climatechange.dart';
 import 'package:education_app/pages/deforestation.dart';
-import 'package:education_app/pages/donate.dart';
-import 'package:education_app/pages/donate.dart'; // Tambahkan import ini
 import 'package:education_app/pages/flood.dart';
 import 'package:education_app/pages/foodwaste.dart';
-import 'package:education_app/pages/formdonate.dart';
-import 'package:education_app/pages/formvolunteer.dart';
 import 'package:education_app/pages/history.dart';
 import 'package:education_app/pages/homepage.dart';
-import 'package:education_app/pages/profile.dart';
 import 'package:education_app/pages/sign-in.dart';
 import 'package:education_app/pages/sign-up.dart';
 import 'package:education_app/pages/splashscreen.dart';
-import 'package:education_app/pages/takeAction1.dart';
 import 'package:education_app/pages/waste.dart';
 import 'package:education_app/providers/don_articles.dart';
 import 'package:education_app/providers/edu_articles.dart';
@@ -87,8 +81,7 @@ class MyApp extends StatelessWidget {
           "/waste": (context) => WastePage(),
           "/foodwaste": (context) => FoodWastePage(),
           // "/profile": (context) => ProfilePage(),
-          "/donate": (context) => DonationPage(),
-          "/take1": (context) => TakeAction1Page(title: ''),
+          // "/donate": (context) => DonationPage(),
         },
         initialRoute: "/splash",
       ),

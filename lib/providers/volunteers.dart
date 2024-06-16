@@ -18,6 +18,7 @@ class Volunteers with ChangeNotifier {
           province: doc['province'],
           city: doc['city'],
           reason: doc['reason'],
+          articleTitle: doc['articleTitle'], // Properti baru
         ));
       });
       return volunteers;
@@ -34,6 +35,7 @@ class Volunteers with ChangeNotifier {
     String province,
     String city,
     String reason,
+    String articleTitle, // Parameter baru
   ) async {
     try {
       await _firestore.collection('volunteers').add({
@@ -43,6 +45,7 @@ class Volunteers with ChangeNotifier {
         'province': province,
         'city': city,
         'reason': reason,
+        'articleTitle': articleTitle, // Properti baru
       });
       notifyListeners();
     } catch (error) {

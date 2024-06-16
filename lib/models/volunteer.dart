@@ -2,13 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 
-class Volunteer with ChangeNotifier {
+class Volunteer {
   final String fullName;
   final String email;
   final String age;
   final String province;
   final String city;
   final String reason;
+  final String articleTitle; // Properti baru
 
   Volunteer({
     required this.fullName,
@@ -17,7 +18,9 @@ class Volunteer with ChangeNotifier {
     required this.province,
     required this.city,
     required this.reason,
+    required this.articleTitle, // Properti baru
   });
+
 
   factory Volunteer.fromfirestore(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
@@ -30,7 +33,8 @@ class Volunteer with ChangeNotifier {
         age: 'age',
         province: 'province',
         city: 'city',
-        reason: 'reason');
+        reason: 'reason',
+        articleTitle: 'articleTitle');
   }
 
   Map<String, dynamic> tofirestore() {
@@ -40,6 +44,7 @@ class Volunteer with ChangeNotifier {
       if (province != null) "province": province,
       if (city != null) "city": city,
       if (reason != null) "reason": reason,
+      if (articleTitle != null) "articleTitle": articleTitle
     };
   }
 

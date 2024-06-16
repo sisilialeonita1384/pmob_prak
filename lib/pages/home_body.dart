@@ -9,11 +9,6 @@ import 'package:education_app/pages/add_edu_article.dart';
 import 'package:education_app/pages/add_vol_article.dart';
 import 'package:education_app/pages/add_don_article.dart';
 import 'package:education_app/pages/detail_article.dart';
-import 'package:education_app/pages/takeAction1.dart';
-import 'package:education_app/pages/takeAction2.dart';
-import 'package:education_app/pages/takeAction3.dart';
-import 'package:education_app/pages/takeAction4.dart';
-import 'package:education_app/pages/takeAction5.dart';
 import 'package:education_app/models/category.dart';
 import 'package:education_app/pages/detail_vol_articles.dart';
 

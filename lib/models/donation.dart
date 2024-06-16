@@ -7,12 +7,14 @@ class Donation with ChangeNotifier {
   final String emailDonation;
   final String ageDonation;
   final String payment;
+  final String articleTitle;
 
   Donation({
     required this.fullNameDonation,
     required  this.emailDonation,
     required this.ageDonation,
     required this.payment,
+    required this.articleTitle
   });
 
   factory Donation.fromfirestore(
@@ -24,7 +26,8 @@ class Donation with ChangeNotifier {
         fullNameDonation: 'fullNameDonation',
         emailDonation: 'emailDonation',
         ageDonation: 'ageDonation',
-        payment: 'payment');
+        payment: 'payment',
+        articleTitle: 'articleTitle');
   }
 
   Map<String, dynamic> tofirestore() {
@@ -33,6 +36,7 @@ class Donation with ChangeNotifier {
       if (emailDonation != null) "emailDonation": emailDonation,
       if (ageDonation != null) "ageDonation": ageDonation,
       if (payment != null) "payment": payment,
+      if (articleTitle != null) "articleTitle": articleTitle
     };
   }
 
