@@ -55,16 +55,7 @@ class VolunteerArticleDetailPage extends StatelessWidget {
                 margin: EdgeInsets.only(top: 40),
                 child: Image.network(image),
               ),
-              Container(
-                margin: EdgeInsets.all(20),
-                child: const Text(
-                  "Description",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 18,
-                  ),
-                ),
-              ),
+              
               Container(
                 margin: EdgeInsets.only(left: 20, right: 20, bottom: 20),
                 child: Text(

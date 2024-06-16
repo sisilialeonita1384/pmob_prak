@@ -77,7 +77,7 @@ class _HomeBodyState extends State<HomeBody> {
             child: Container(
               padding: EdgeInsets.all(15),
               decoration: const BoxDecoration(
-                color: Color.fromRGBO(10, 99, 61, 1),
+                color: Color.fromRGBO(10, 99, 61, 50),
               ),
               child: const Text(
                 'Pilih Jenis Artikel',
@@ -169,6 +169,17 @@ class _HomeBodyState extends State<HomeBody> {
         .get();
   }
 
+  String getGreeting() {
+    var hour = DateTime.now().hour;
+    if (hour < 12) {
+      return 'Good Morning';
+    } else if (hour < 17) {
+      return 'Good Afternoon';
+    } else {
+      return 'Good Evening';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -185,8 +196,8 @@ class _HomeBodyState extends State<HomeBody> {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomLeft,
                 colors: [
-                  Color.fromRGBO(10, 99, 61, 1),
-                  Color.fromRGBO(78, 138, 103, 1),
+                  Color.fromRGBO(10, 99, 61, 50),
+                  Color.fromRGBO(78, 138, 103, 50),
                 ],
               ),
             ),
@@ -201,13 +212,14 @@ class _HomeBodyState extends State<HomeBody> {
                     children: [
                       Flexible(
                         child: Container(
-                          margin: EdgeInsets.only(left: 180),
+                          margin: EdgeInsets.only(left: 140),
                           child: const Text(
                             "EcoAction",
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: Colors.white),
+                                color: Colors.white,
+                                fontSize: 20),
                           ),
                         ),
                       ),
@@ -223,24 +235,38 @@ class _HomeBodyState extends State<HomeBody> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text("Good Morning,",
-                              style: TextStyle(
-                                  fontSize: 12, color: Colors.white)),
+                          Text(
+                            getGreeting(),
+                            style: TextStyle(fontSize: 12, color: Colors.white),
+                          ),
                           FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
                             future: getUserDetails(),
                             builder: (context, snapshot) => Text(
-                                snapshot.data?.data()?['username'] ?? '',
-                                style: const TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white)),
+                              snapshot.data?.data()?['username'] ?? '',
+                              style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
+                            ),
                           ),
                         ],
                       ),
-                      const CircleAvatar(
-                        radius: 30,
-                        backgroundImage: AssetImage('assets/images/evita.png'),
-                      )
+                      FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                        future: getUserDetails(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return const CircleAvatar(
+                              radius: 30,
+                              backgroundImage: AssetImage('assets/default_avatar.png'),
+                            );
+                          }
+                          final userPhotoUrl = snapshot.data?.data()?['photoUrl'] ?? 'assets/default_avatar.png';
+                          return CircleAvatar(
+                            radius: 30,
+                            backgroundImage: NetworkImage(userPhotoUrl),
+                          );
+                        },
+                      ),
                     ],
                   ),
                 ),
@@ -256,16 +282,16 @@ class _HomeBodyState extends State<HomeBody> {
                 child: const Text(
                   "What's New?",
                   style: TextStyle(
-                    color: Color.fromRGBO(10, 99, 61, 1),
+                    color: Color.fromRGBO(10, 99, 61, 50),
                     fontSize: 20,
                   ),
                 ),
               ),
               Container(
                 margin: EdgeInsets.only(top: 10),
-                height: 200,  // Adjusted the height to accommodate larger content
+                height: 200,  
                 child: articles.isEmpty
-                    ? Center(child: CircularProgressIndicator())
+                    ? Center(child: CircularProgressIndicator(color: Color.fromRGBO(10, 99, 61, 50)))
                     : CarouselSlider.builder(
                         itemCount: articles.length,
                         itemBuilder: (BuildContext context, int index,
@@ -303,7 +329,7 @@ class _HomeBodyState extends State<HomeBody> {
                                   fit: BoxFit.cover,
                                   errorBuilder: (context, error, stackTrace) {
                                     print('Error loading image: $error');
-                                    return Placeholder(
+                                    return const Placeholder(
                                       fallbackHeight: 90,
                                       fallbackWidth: 150,
                                     );
@@ -351,26 +377,17 @@ class _HomeBodyState extends State<HomeBody> {
                     Text(
                       "More Ways You Can Help",
                       style: Theme.of(context).textTheme.bodyText1?.copyWith(
-                            color: Color.fromRGBO(10, 99, 61, 1),
+                            color: Color.fromRGBO(10, 99, 61, 50),
                           ),
-                    ),
-                    TextButton(
-                      onPressed: () {},
-                      child: Text(
-                        "See All",
-                        style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                              color: Color.fromRGBO(10, 99, 61, 1),
-                            ),
-                      ),
                     ),
                   ],
                 ),
               ),
-              SizedBox(height: 30), // Adjust this height as needed
+              SizedBox(height: 30),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: volunteerArticles.isEmpty
-                    ? const Center(child: CircularProgressIndicator())
+                    ? const Center(child: CircularProgressIndicator(color: Color.fromRGBO(10, 99, 61, 50)))
                     : GridView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
@@ -459,8 +476,8 @@ class _HomeBodyState extends State<HomeBody> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Color.fromRGBO(78, 138, 103, 1),
-        splashColor: Color.fromRGBO(78, 138, 103, 1),
+        backgroundColor: Color.fromRGBO(78, 138, 103, 50),
+        splashColor: Color.fromRGBO(78, 138, 103, 50),
         onPressed: () {
           _showArticleTypeDialog(context);
         },

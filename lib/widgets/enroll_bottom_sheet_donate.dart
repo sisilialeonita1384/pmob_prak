@@ -17,16 +17,6 @@ class _EnrollBottomSheetDonateState extends State<EnrollBottomSheetDonate> {
       padding: const EdgeInsets.symmetric(horizontal: 30.0),
       child: Row(
         children: [
-          CustomIconButton(
-            onTap: () {},
-            height: 45,
-            width: 45,
-            child: const Icon(
-              Icons.bookmark,
-              color: Colors.pink,
-              size: 30,
-            ),
-          ),
           const SizedBox(width: 20),
           Expanded(
             child: CustomIconButton(

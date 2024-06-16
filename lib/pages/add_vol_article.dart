@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:education_app/pages/detail_vol_articles.dart';
+import 'package:education_app/pages/home_body.dart';
 import 'package:education_app/providers/vol_articles.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -158,11 +159,7 @@ class _AddVolunteerArticlePageState extends State<AddVolunteerArticlePage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => VolunteerArticleDetailPage(
-                                title: nameArticleController.text,
-                                image: imageUrl,
-                                description: descriptionArticleController.text,
-                              ),
+                              builder: (context) => HomeBody(),
                             ),
                           );
                           print("Added Article Data to Firestore");

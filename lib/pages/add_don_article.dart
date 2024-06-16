@@ -176,7 +176,7 @@ class _AddDonationArticlePageState extends State<AddDonationArticlePage> {
                                     ),
                                     SizedBox(height: 20.0),
                                     const Text(
-                                      'You can update this page by clicking the pencil button.',
+                                      'Your article has been successfully posted. Thank you for sharing your insights with the community!',
                                       style: TextStyle(color: Colors.black),
                                       textAlign: TextAlign.center,
                                     ),

@@ -286,27 +286,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                         color: Colors.white),
                                   ),
                                 ),
-                                const SizedBox(height: 10),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15),
-                                    color: const Color.fromRGBO(10, 99, 61, 50),
-                                  ),
-                                  margin: const EdgeInsets.only(
-                                      left: 10, right: 20),
-                                  child: ListTile(
-                                    leading: const Icon(Icons.book,
-                                        color: Colors.white),
-                                    title: const Text("About EcoAction",
-                                        style: TextStyle(
-                                            color: Colors.white, fontSize: 20)),
-                                    onTap: () {
-                                      // Navigate to AboutUsPage
-                                    },
-                                    trailing: const Icon(Icons.arrow_forward,
-                                        color: Colors.white),
-                                  ),
-                                ),
+                                const SizedBox(height: 10),                               
                               ],
                             ),
                           ),
