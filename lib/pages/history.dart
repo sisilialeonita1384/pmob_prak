@@ -25,7 +25,6 @@ class _HistoryPageState extends State<HistoryPage> {
   Widget build(BuildContext context) {
     final volunteersProvider = Provider.of<Volunteers>(context);
     final donationsProvider = Provider.of<Donations>(context);
-
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(120.0),
@@ -157,7 +156,7 @@ class _HistoryPageState extends State<HistoryPage> {
           }),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator(color: Color.fromRGBO(78, 138, 103, 50),));
             } else if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -249,7 +248,7 @@ class _HistoryPageState extends State<HistoryPage> {
           }),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator(color: Color.fromRGBO(78, 138, 103, 50)));
             } else if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
