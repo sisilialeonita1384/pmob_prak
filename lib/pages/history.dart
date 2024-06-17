@@ -226,98 +226,96 @@ class _HistoryPageState extends State<HistoryPage> {
   }
 
   Widget _buildDonationHistoryWidget(Donations donationsProvider) {
-    return Center(
-      child: Container(
-        margin: const EdgeInsets.all(20),
-        child: FutureBuilder<List<DonationHistory>>(
-          future: donationsProvider.getDonationHistory(),
-          builder: (context, snapshot) {
-            print('Snapshot connection state: ${snapshot.connectionState}');
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              print('Error: ${snapshot.error}');
-              return Center(child: Text('Error: ${snapshot.error}'));
-            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return const Center(child: Text('No donation history found.'));
-            } else {
-              return ListView.builder(
-                itemCount: snapshot.data!.length,
-                itemBuilder: (context, index) {
-                  final item = snapshot.data![index];
-                  return Container(
-                    height: 136,
-                    margin: const EdgeInsets.symmetric(vertical: 8.0),
-                    decoration: BoxDecoration(
-                      color: const Color.fromRGBO(251, 241, 221, 50),
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 4,
-                          spreadRadius: 0.5,
-                        ),
-                      ],
-                    ),
-                    padding: const EdgeInsets.all(10),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                item.title,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
+  return Center(
+    child: Container(
+      margin: const EdgeInsets.all(20),
+      child: FutureBuilder<List<DonationHistory>>(
+        future: donationsProvider.getDonationHistory(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text('No donation history found.'));
+          } else {
+            return ListView.builder(
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                final item = snapshot.data![index];
+                return Container(
+                  height: 136,
+                  margin: const EdgeInsets.symmetric(vertical: 8.0),
+                  decoration: BoxDecoration(
+                    color: const Color.fromRGBO(251, 241, 221, 50),
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 4,
+                        spreadRadius: 0.5,
+                      ),
+                    ],
+                  ),
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              item.title,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
                               ),
-                              Text(
-                                item.registeredAt.toString(),
-                                style: const TextStyle(fontSize: 12),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              const SizedBox(height: 10),
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    " Amount: ${item.amount} ",
-                                    style: const TextStyle(
-                                      color: Color.fromRGBO(10, 99, 61, 50),
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          width: 100,
-                          height: 100,
-                          decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius: BorderRadius.circular(8.0),
-                            image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: NetworkImage(item.imageUrl),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                             ),
+                            Text(
+                              item.registeredAt.toString(),
+                              style: const TextStyle(fontSize: 12),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: 10),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  " Amount: ${item.amount} ",
+                                  style: const TextStyle(
+                                    color: Color.fromRGBO(10, 99, 61, 50),
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        width: 100,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          color: Colors.grey,
+                          borderRadius: BorderRadius.circular(8.0),
+                          image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: NetworkImage(item.imageUrl), // Gunakan imageUrl dari objek DonationHistory
                           ),
                         ),
-                      ],
-                    ),
-                  );
-                },
-              );
-            }
-          },
-        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            );
+          }
+        },
       ),
-    );
-  }
+    ),
+  );
+}
 }

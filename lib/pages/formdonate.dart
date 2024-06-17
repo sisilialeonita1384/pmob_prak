@@ -5,8 +5,9 @@ import 'package:flutter/material.dart';
 
 class DonateFormPage extends StatefulWidget {
   final String title;
+  final String imageUrl;
 
-  const DonateFormPage({Key? key, required this.title}) : super(key: key);
+  const DonateFormPage({Key? key, required this.title, required this.imageUrl}) : super(key: key);
 
   @override
   _DonateFormPageState createState() => _DonateFormPageState();
@@ -144,6 +145,8 @@ class _DonateFormPageState extends State<DonateFormPage> {
                           ageDonationController.text,
                           paymentController.text,
                           widget.title,
+                          widget.imageUrl,
+
                         );
                         showSuccessDialog(context);
                         print("Added Donation Data to Firestore");

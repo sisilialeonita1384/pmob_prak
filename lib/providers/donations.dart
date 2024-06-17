@@ -56,36 +56,41 @@ class Donations with ChangeNotifier {
   }
 
   Future<void> addDonation(
-    String fullName,
-    String email,
-    String age,
-    String payment,
-    String articleTitle,
-  ) async {
-    try {
-      await _firestore.collection('donations').add({
-        'fullName': fullName,
-        'email': email,
-        'age': age,
-        'payment': payment,
-        'articleTitle': articleTitle,
-      });
+  String fullName,
+  String email,
+  String age,
+  String payment,
+  String articleTitle,
+  String imageUrl, // Tambahkan parameter ini
+) async {
+  try {
+    await _firestore.collection('donations').add({
+      'fullName': fullName,
+      'email': email,
+      'age': age,
+      'payment': payment,
+      'articleTitle': articleTitle,
+      'imageUrl': imageUrl, // Simpan URL gambar
+    });
 
-      // Save to donation_history
-      final double amount = double.tryParse(payment) ?? 0.0;
-      final history = DonationHistory(
-        title: articleTitle,
-        registeredAt: DateTime.now(),
-        amount: amount,
-        imageUrl: 'image_url_here', // Provide image URL here
-      );
-      await _firestore.collection('donation_history').add(history.toMap());
+    // Save to donation_history
+    final double amount = double.tryParse(payment) ?? 0.0;
+    final history = DonationHistory(
+      title: articleTitle,
+      registeredAt: DateTime.now(),
+      amount: amount,
+      imageUrl: imageUrl, // Gunakan URL gambar yang disediakan
+    );
+    await _firestore.collection('donation_history').add(history.toMap());
 
-      notifyListeners(); // Ensure listeners are notified of changes
-    } catch (error) {
-      print('Error adding donation: $error');
-    }
+    notifyListeners(); // Pastikan listener diberitahu tentang perubahan
+  } catch (error) {
+    print('Error adding donation: $error');
+    throw error; // Lepaskan error untuk ditangani di UI
   }
+}
+
+
 
   Future<List<DonationHistory>> getDonationHistory() async {
     try {

@@ -52,16 +52,7 @@ class DonationArticleDetailPage extends StatelessWidget {
                 margin: EdgeInsets.only(top: 40),
                 child: Image.network(artikel.image),
               ),
-              Container(
-                margin: EdgeInsets.all(20),
-                child: const Text(
-                  "Deskripsi",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 18,
-                  ),
-                ),
-              ),
+              
               Container(
                 margin: EdgeInsets.only(left: 20, right: 20, bottom: 20),
                 child: Text(
@@ -83,7 +74,10 @@ class DonationArticleDetailPage extends StatelessWidget {
           builder: (context) {
             return SizedBox(
               height: 80,
-              child: EnrollBottomSheetDonate(title: artikel.nameArticle),
+              child: EnrollBottomSheetDonate(
+              title: artikel.nameArticle,
+              imageUrl: artikel.image,
+            ),
             );
           },
         ),

@@ -159,7 +159,7 @@ class _VolunteerFormPageState extends State<VolunteerFormPage> {
                       Text(
                         'Register for ${widget.title}',
                         style: const TextStyle(
-                            fontSize: 20, 
+                            fontSize: 20,
                             fontWeight: FontWeight.bold,
                             color: Color.fromRGBO(10, 99, 61, 50)),
                       ),
@@ -277,7 +277,7 @@ class _VolunteerFormPageState extends State<VolunteerFormPage> {
                               _selectedProvince as String,
                               _selectedCity as String,
                               reasonController.text,
-                              widget.title, 
+                              widget.title,
                             );
                             showDialog(
                               context: context,
@@ -303,9 +303,18 @@ class _VolunteerFormPageState extends State<VolunteerFormPage> {
                                         SizedBox(height: 20.0),
                                         const Text(
                                           'Volunteer Registered Successfully!',
+                                          textAlign: TextAlign.center,
                                           style: TextStyle(
                                             fontSize: 18.0,
                                             fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        SizedBox(height: 10.0),
+                                        const Text(
+                                          'The invitation will be sent via email.',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontSize: 14.0,
                                           ),
                                         ),
                                         SizedBox(height: 20.0),
@@ -321,7 +330,11 @@ class _VolunteerFormPageState extends State<VolunteerFormPage> {
                                                   BorderRadius.circular(20.0),
                                             ),
                                           ),
-                                          child: const Text('OK', style: TextStyle(color: Colors.white),),
+                                          child: const Text(
+                                            'OK',
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -475,5 +488,7 @@ class _VolunteerFormPageState extends State<VolunteerFormPage> {
 }
 
 void main() {
-  runApp(VolunteerFormPage(title: '',));
+  runApp(VolunteerFormPage(
+    title: '',
+  ));
 }

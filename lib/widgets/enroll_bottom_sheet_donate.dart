@@ -1,17 +1,15 @@
-import 'package:education_app/pages/formdonate.dart';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
-import 'custom_icon_bottom.dart';
+import 'custom_icon_bottom.dart'; // Pastikan import custom_icon_bottom.dart sesuai dengan struktur Anda
+import 'package:education_app/pages/formdonate.dart'; // Sesuaikan dengan path file DonateFormPage
 
-class EnrollBottomSheetDonate extends StatefulWidget {
-  final String title; 
+class EnrollBottomSheetDonate extends StatelessWidget {
+  final String title;
+  final String imageUrl; // Tambahkan properti imageUrl
 
-  const EnrollBottomSheetDonate({Key? key, required this.title}) : super(key: key);
+  const EnrollBottomSheetDonate({Key? key, required this.title, required this.imageUrl}) : super(key: key);
 
-  @override
-  _EnrollBottomSheetDonateState createState() => _EnrollBottomSheetDonateState();
-}
-
-class _EnrollBottomSheetDonateState extends State<EnrollBottomSheetDonate> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -22,10 +20,14 @@ class _EnrollBottomSheetDonateState extends State<EnrollBottomSheetDonate> {
           Expanded(
             child: CustomIconButton(
               onTap: () {
+                // Navigasi ke halaman formulir donasi
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => DonateFormPage(title: widget.title),
+                    builder: (context) => DonateFormPage(
+                      title: title,
+                      imageUrl: imageUrl, // Teruskan imageUrl ke DonateFormPage
+                    ),
                   ),
                 );
               },

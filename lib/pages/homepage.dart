@@ -1,10 +1,9 @@
-import 'package:education_app/pages/home_body.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:education_app/pages/home_body.dart';
 import 'package:education_app/pages/history.dart';
 import 'package:education_app/pages/donate.dart';
 import 'package:education_app/pages/profile.dart';
-import 'package:get/utils.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -20,9 +19,9 @@ class _HomePageState extends State<HomePage> {
     HomeBody(),
     HistoryPage(),
     DonationPage(),
-    ProfilePage()
+    ProfilePage(),
   ];
-  
+
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -30,49 +29,43 @@ class _HomePageState extends State<HomePage> {
       child: Scaffold(
         bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
-          selectedItemColor: Color.fromARGB(255, 27, 94, 32) ,
+          selectedItemColor: Color.fromARGB(255, 27, 94, 32),
           backgroundColor: Color.fromRGBO(251, 241, 221, 50),
           elevation: 0,
-          items: const [
-            BottomNavigationBarItem(
-              activeIcon: Icon(Icons.home, color:Color.fromARGB(255, 27, 94, 32) ,),
-              icon: Icon(Icons.home_outlined),
-              label: "Home",
-            ),
-            BottomNavigationBarItem(
-              activeIcon: Icon(Icons.group, color:Color.fromARGB(255, 27, 94, 32)),
-              icon: Icon(Icons.history),
-              label: "History",
-            ),
-            BottomNavigationBarItem(
-              activeIcon: Icon(Icons.favorite_border, color:Color.fromARGB(255, 27, 94, 32)),
-              icon: Icon(Icons.favorite_border_outlined),
-              label: "Donation",
-            ),
-            BottomNavigationBarItem(
-              activeIcon: Icon(
-                Icons.person, color:Color.fromARGB(255, 27, 94, 32)
-              ),
-              icon: Icon(
-                Icons.person_2_outlined,
-              ),
-              label: "Account",
-            ),
-          ],
+          currentIndex: _currentIndex,
           onTap: (int index) {
             setState(() {
               _currentIndex = index;
             });
           },
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home_outlined),
+              activeIcon: Icon(Icons.home, color: Color.fromARGB(255, 27, 94, 32)),
+              label: "Home",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.history),
+              activeIcon: Icon(Icons.history_rounded, color: Color.fromARGB(255, 27, 94, 32)),
+              label: "History",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.favorite_border_outlined),
+              activeIcon: Icon(Icons.favorite_rounded, color: Color.fromARGB(255, 27, 94, 32)),
+              label: "Donation",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person_2_outlined),
+              activeIcon: Icon(Icons.person, color: Color.fromARGB(255, 27, 94, 32)),
+              label: "Account",
+            ),
+          ],
         ),
-        body: pages[_currentIndex],
-        
+        body: IndexedStack(
+          index: _currentIndex,
+          children: pages,
+        ),
       ),
     );
   }
 }
-
-
-
-
-
