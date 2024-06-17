@@ -2,9 +2,10 @@ import 'package:education_app/pages/sign-up.dart';
 import 'package:education_app/pages/homepage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignInPage extends StatelessWidget {
-  const SignInPage({super.key});
+  const SignInPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,30 +23,8 @@ class SignInPage extends StatelessWidget {
   }
 }
 
-class _Logo extends StatelessWidget {
-  _Logo({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          width: 150,
-          height: 150,
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/images/logo ecoact.png"),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
 class _FormContent extends StatefulWidget {
-  const _FormContent({Key? key});
+  const _FormContent({Key? key}) : super(key: key);
 
   @override
   State<_FormContent> createState() => __FormContentState();
@@ -58,6 +37,27 @@ class __FormContentState extends State<_FormContent> {
   final _passwordController = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadEmail();
+  }
+
+  Future<void> _saveEmail(String email) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('last_logged_in_email', email);
+  }
+
+  Future<void> _loadEmail() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? email = prefs.getString('last_logged_in_email');
+    if (email != null) {
+      setState(() {
+        _emailController.text = email;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +73,7 @@ class __FormContentState extends State<_FormContent> {
               controller: _emailController,
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Please enter some text';
+                  return 'Please enter your email';
                 }
                 return null;
               },
@@ -104,7 +104,7 @@ class __FormContentState extends State<_FormContent> {
               controller: _passwordController,
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Please enter some text';
+                  return 'Please enter your password';
                 }
 
                 if (value.length < 6) {
@@ -150,17 +150,17 @@ class __FormContentState extends State<_FormContent> {
             _gap(),
             CheckboxListTile(
               value: _rememberMe,
-              hoverColor: Colors.green.shade900,
               onChanged: (value) {
-                if (value == null) return;
-                setState(() {
-                  _rememberMe = value;
-                });
+                if (value != null) {
+                  setState(() {
+                    _rememberMe = value!;
+                  });
+                }
               },
               title: const Text('Remember me'),
               controlAffinity: ListTileControlAffinity.leading,
               dense: true,
-              contentPadding: const EdgeInsets.all(0),
+              contentPadding: EdgeInsets.all(0),
             ),
             _gap(),
             SizedBox(
@@ -169,26 +169,21 @@ class __FormContentState extends State<_FormContent> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green.shade900,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8)),
-                ),
-                child: const Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: Text(
-                    'Sign in',
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                 ),
                 onPressed: () {
-                  if (_formKey.currentState?.validate() ?? false) {
+                  if (_formKey.currentState!.validate()) {
                     FirebaseAuth.instance
                         .signInWithEmailAndPassword(
                       email: _emailController.text,
                       password: _passwordController.text,
-                    ).then(
-                      (value) {
+                    )
+                        .then(
+                      (value) async {
+                        if (_rememberMe) {
+                          await _saveEmail(_emailController.text);
+                        }
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => HomePage()),
@@ -204,10 +199,7 @@ class __FormContentState extends State<_FormContent> {
                               actions: [
                                 TextButton(
                                   onPressed: () {
-                                    Navigator.of(context).pop(
-                                      MaterialPageRoute(
-                                          builder: (context) => SignInPage()),
-                                    );
+                                    Navigator.of(context).pop();
                                     _formKey.currentState?.reset();
                                   },
                                   child: Text("OK"),
@@ -220,6 +212,17 @@ class __FormContentState extends State<_FormContent> {
                     );
                   }
                 },
+                child: Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: Text(
+                    'Sign in',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
               ),
             ),
             const SizedBox(height: 35),
@@ -249,6 +252,30 @@ class __FormContentState extends State<_FormContent> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _gap() => const SizedBox(height: 16);
+}
+
+class _Logo extends StatelessWidget {
+  const _Logo({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 150,
+          height: 150,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/images/logo ecoact.png"),
+            ),
+          ),
+        ),
+      ],
     );
   }
 

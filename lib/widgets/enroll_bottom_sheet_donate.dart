@@ -6,7 +6,7 @@ import 'package:education_app/pages/formdonate.dart'; // Sesuaikan dengan path f
 
 class EnrollBottomSheetDonate extends StatelessWidget {
   final String title;
-  final String imageUrl; // Tambahkan properti imageUrl
+  final String imageUrl; 
 
   const EnrollBottomSheetDonate({Key? key, required this.title, required this.imageUrl}) : super(key: key);
 

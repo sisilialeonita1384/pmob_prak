@@ -77,7 +77,7 @@ class DonationArticleDetailPage extends StatelessWidget {
               height: 80,
               child: EnrollBottomSheetDonate(
                 title: artikel.nameArticle,
-                imageUrl: artikel.image,
+                imageUrl: artikel.image, 
               ),
             );
           },

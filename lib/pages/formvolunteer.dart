@@ -1,13 +1,17 @@
 import 'package:education_app/pages/history.dart';
 import 'package:education_app/providers/volunteers.dart';
-import 'package:education_app/models/vol_article.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class VolunteerFormPage extends StatefulWidget {
   final String title;
   final String imageUrl;
+  final String? initialEmail;
   const VolunteerFormPage(
-      {super.key, required this.title, required this.imageUrl});
+      {super.key,
+      required this.title,
+      required this.imageUrl,
+      this.initialEmail});
 
   @override
   _VolunteerFormPageState createState() => _VolunteerFormPageState();
@@ -20,7 +24,6 @@ class _VolunteerFormPageState extends State<VolunteerFormPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController ageController = TextEditingController();
   final TextEditingController reasonController = TextEditingController();
-
   String? _selectedProvince;
   String? _selectedCity;
 
@@ -82,6 +85,23 @@ class _VolunteerFormPageState extends State<VolunteerFormPage> {
     'Papua': ['Jayapura'],
     'Papua Barat': ['Manokwari', 'Sorong'],
   };
+
+  @override
+  void initState() {
+    super.initState();
+    _loadEmail();
+  }
+
+  Future<void> _loadEmail() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? email = prefs.getString('last_logged_in_email');
+    print('Loaded email: $email');
+    if (email != null) {
+      setState(() {
+        emailController.text = email; 
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -323,16 +343,16 @@ class _VolunteerFormPageState extends State<VolunteerFormPage> {
                                                                 HistoryPage()),
                                                       );
                                                     },
-                                                    style:
-                                                        ElevatedButton.styleFrom(
+                                                    style: ElevatedButton
+                                                        .styleFrom(
                                                       backgroundColor:
                                                           const Color.fromRGBO(
                                                               10, 99, 61, 50),
                                                       shape:
                                                           RoundedRectangleBorder(
                                                         borderRadius:
-                                                            BorderRadius.circular(
-                                                                20.0),
+                                                            BorderRadius
+                                                                .circular(20.0),
                                                       ),
                                                     ),
                                                     child: const Text(
@@ -500,7 +520,7 @@ class _VolunteerFormPageState extends State<VolunteerFormPage> {
 
 void main() {
   runApp(VolunteerFormPage(
-    title: '',
-    imageUrl: '',
+    title: 'Volunteer',
+    imageUrl: 'assets/volunteer.png',
   ));
 }

@@ -5,7 +5,7 @@ import 'package:education_app/providers/vol_articles.dart';
 
 class EnrollBottomSheet extends StatefulWidget {
   final String title;
-  final String imageUrl; // Tambahkan properti imageUrl
+  final String imageUrl; 
 
   const EnrollBottomSheet({Key? key, required this.title, required this.imageUrl}) : super(key: key);
 

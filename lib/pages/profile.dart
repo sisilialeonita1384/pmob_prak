@@ -1,13 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:education_app/pages/sign-in.dart';
 import 'package:education_app/pages/update_profile.dart';
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:typed_data';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -18,24 +16,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   Uint8List? _image;
-  String _storedImageUrl = "";
   final User? currentUser = FirebaseAuth.instance.currentUser;
-
-  @override
-  void initState() {
-    super.initState();
-    loadStoredImageUrl();
-  }
-
-  void loadStoredImageUrl() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _storedImageUrl = prefs.getString('profileImageUrl') ?? "";
-    });
-    if (_storedImageUrl.isNotEmpty) {
-      loadProfileImage(_storedImageUrl);
-    }
-  }
 
   Future<DocumentSnapshot<Map<String, dynamic>>> getUserDetails() async {
     if (currentUser == null) {
@@ -65,6 +46,13 @@ class _ProfilePageState extends State<ProfilePage> {
       return "";
     }
   }
+  void signOut() async {
+    await FirebaseAuth.instance.signOut();
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => SignInPage()),
+    );
+  }
 
   Future<void> selectImage() async {
     final picker = ImagePicker();
@@ -85,7 +73,7 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  void updateUserPhotoUrl(String photoUrl) async {
+  void updateUserPhotoUrl(String photoUrl) {
     if (currentUser == null) {
       print("User not authenticated");
       return;
@@ -97,38 +85,9 @@ class _ProfilePageState extends State<ProfilePage> {
       'photoUrl': photoUrl,
     }).then((value) {
       print("User photo URL updated successfully");
-      // Update stored image URL
-      saveImageUrlLocally(photoUrl);
     }).catchError((error) {
       print("Failed to update user photo URL: $error");
     });
-  }
-
-  void saveImageUrlLocally(String photoUrl) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('profileImageUrl', photoUrl);
-    setState(() {
-      _storedImageUrl = photoUrl;
-    });
-  }
-
-  void signOut() async {
-    await FirebaseAuth.instance.signOut();
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => SignInPage()),
-    );
-  }
-
-  void loadProfileImage(String photoUrl) async {
-    var response = await http.get(Uri.parse(photoUrl));
-    if (response.statusCode == 200) {
-      setState(() {
-        _image = response.bodyBytes;
-      });
-    } else {
-      print("Failed to load profile image");
-    }
   }
 
   @override
@@ -194,12 +153,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                       )
                                     : CircleAvatar(
                                         radius: 64,
-                                        backgroundImage: _storedImageUrl
-                                                .isNotEmpty
-                                            ? NetworkImage(_storedImageUrl)
-                                            : AssetImage(
-                                                    'assets/default_avatar.png')
-                                                as ImageProvider,
+                                        backgroundImage: NetworkImage(
+                                          user['photoUrl'] ??
+                                              "https://via.placeholder.com/150",
+                                        ),
                                       ),
                               ),
                               Positioned(
@@ -306,4 +263,13 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
+}
+
+Future<Uint8List?> pickImage(ImageSource source) async {
+  final picker = ImagePicker();
+  final pickedFile = await picker.pickImage(source: source);
+  if (pickedFile != null) {
+    return await pickedFile.readAsBytes();
+  }
+  return null;
 }

@@ -50,6 +50,7 @@ class Volunteers with ChangeNotifier {
       'articleTitle': articleTitle,
       'imageUrl': imageUrl,
     });
+    
 
     // Save to volunteer_history
     final history = VolunteerHistory(
@@ -58,8 +59,8 @@ class Volunteers with ChangeNotifier {
       imageUrl: imageUrl, // Provide image URL here
     );
     await _firestore.collection('volunteer_history').add(history.toMap());
-
     notifyListeners(); // Ensure listeners are notified of changes
+
   } catch (error) {
     print('Error adding volunteer: $error');
   }
