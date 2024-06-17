@@ -56,51 +56,53 @@ class Donations with ChangeNotifier {
   }
 
   Future<void> addDonation(
-  String fullName,
-  String email,
-  String age,
-  String payment,
-  String articleTitle,
-  String imageUrl, // Tambahkan parameter ini
-) async {
+    String fullName,
+    String email,
+    String age,
+    String payment,
+    String articleTitle,
+    String imageUrl,
+  ) async {
+    try {
+      // Menambahkan donasi ke koleksi 'donations'
+      DocumentReference donationRef = await _firestore.collection('donations').add({
+        'fullName': fullName,
+        'email': email,
+        'age': age,
+        'payment': payment,
+        'articleTitle': articleTitle,
+        'imageUrl': imageUrl,
+      });
+
+      // Menyimpan riwayat donasi ke koleksi 'donation_history'
+      final double amount = double.tryParse(payment) ?? 0.0;
+      final history = DonationHistory(
+        title: articleTitle,
+        registeredAt: DateTime.now(),
+        amount: amount,
+        imageUrl: imageUrl,
+      );
+      await _firestore.collection('donation_history').add(history.toMap());
+
+      // Menyimpan riwayat donasi ke koleksi 'users' berdasarkan email pengguna
+      await _firestore.collection('users').doc(email).collection('donation_history').add(history.toMap());
+
+      notifyListeners(); // Pastikan listener diberitahu tentang perubahan
+    } catch (error) {
+      print('Error adding donation: $error');
+      throw error; // Lepaskan error untuk ditangani di UI
+    }
+  }
+
+
+  Future<List<DonationHistory>> getDonationHistory(String userEmail) async {
   try {
-    await _firestore.collection('donations').add({
-      'fullName': fullName,
-      'email': email,
-      'age': age,
-      'payment': payment,
-      'articleTitle': articleTitle,
-      'imageUrl': imageUrl, // Simpan URL gambar
-    });
-
-    // Save to donation_history
-    final double amount = double.tryParse(payment) ?? 0.0;
-    final history = DonationHistory(
-      title: articleTitle,
-      registeredAt: DateTime.now(),
-      amount: amount,
-      imageUrl: imageUrl, // Gunakan URL gambar yang disediakan
-    );
-    await _firestore.collection('donation_history').add(history.toMap());
-
-    notifyListeners(); // Pastikan listener diberitahu tentang perubahan
+    final snapshot = await _firestore.collection('users').doc(userEmail).collection('donation_history').get();
+    return snapshot.docs.map((doc) => DonationHistory.fromMap(doc.data())).toList();
   } catch (error) {
-    print('Error adding donation: $error');
-    throw error; // Lepaskan error untuk ditangani di UI
+    print('Error getting donation history: $error');
+    return [];
   }
 }
 
-
-
-  Future<List<DonationHistory>> getDonationHistory() async {
-    try {
-      final snapshot = await _firestore.collection('donation_history').get();
-      return snapshot.docs
-          .map((doc) => DonationHistory.fromMap(doc.data() as Map<String, dynamic>))
-          .toList();
-    } catch (error) {
-      print('Error getting donation history: $error');
-      return [];
-    }
-  }
 }
