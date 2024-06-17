@@ -1,7 +1,7 @@
-import 'package:education_app/models/donation.dart';
 import 'package:education_app/pages/history.dart';
 import 'package:education_app/providers/donations.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DonateFormPage extends StatefulWidget {
   final String title;
@@ -22,6 +22,23 @@ class _DonateFormPageState extends State<DonateFormPage> {
   final TextEditingController emailDonationController = TextEditingController();
   final TextEditingController ageDonationController = TextEditingController();
   final TextEditingController paymentController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadEmail();
+  }
+
+  Future<void> _loadEmail() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? email = prefs.getString('last_logged_in_email');
+    print('Loaded email: $email');
+    if (email != null) {
+      setState(() {
+        emailDonationController.text = email;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -106,6 +123,18 @@ class _DonateFormPageState extends State<DonateFormPage> {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your full name';
+                    }
+                    return null;
+                  },
+                  style: TextStyle(color: Colors.white), 
+                ),
+                SizedBox(height: 30.0),
+                _buildShadowedTextField(
+                  controller: emailDonationController,
+                  labelText: 'E-mail',
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your email';
                     }
                     return null;
                   },
