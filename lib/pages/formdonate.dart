@@ -7,7 +7,8 @@ class DonateFormPage extends StatefulWidget {
   final String title;
   final String imageUrl;
 
-  const DonateFormPage({Key? key, required this.title, required this.imageUrl}) : super(key: key);
+  const DonateFormPage({Key? key, required this.title, required this.imageUrl})
+      : super(key: key);
 
   @override
   _DonateFormPageState createState() => _DonateFormPageState();
@@ -81,7 +82,7 @@ class _DonateFormPageState extends State<DonateFormPage> {
             ),
           ),
         ),
-        backgroundColor: Color.fromRGBO(251, 241, 221, 50),
+        backgroundColor: Color.fromRGBO(251, 241, 221, 1),
         body: Container(
           margin: EdgeInsets.only(top: 20.0),
           padding: const EdgeInsets.all(20.0),
@@ -146,7 +147,6 @@ class _DonateFormPageState extends State<DonateFormPage> {
                           paymentController.text,
                           widget.title,
                           widget.imageUrl,
-
                         );
                         showSuccessDialog(context);
                         print("Added Donation Data to Firestore");
@@ -165,9 +165,12 @@ class _DonateFormPageState extends State<DonateFormPage> {
                   child: const Text(
                     'Submit',
                     style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold),
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                   ),
-                ),
+                )
               ],
             ),
           ),
@@ -281,7 +284,10 @@ class _DonateFormPageState extends State<DonateFormPage> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => HistoryPage()),
+                );
               },
               child: Text("OK"),
             ),

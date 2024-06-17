@@ -35,7 +35,7 @@ class EnrollBottomSheetDonate extends StatelessWidget {
               height: 45,
               width: 45,
               child: const Text(
-                "Take Action",
+                "Donate Now",
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 18,

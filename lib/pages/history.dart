@@ -144,8 +144,6 @@ class _HistoryPageState extends State<HistoryPage> {
         child: FutureBuilder<List<VolunteerHistory>>(
           future: volunteersProvider.getVolunteerHistory(),
           builder: (context, snapshot) {
-            print('Snapshot connection state: ${snapshot.connectionState}');
-
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
@@ -303,7 +301,7 @@ class _HistoryPageState extends State<HistoryPage> {
                           borderRadius: BorderRadius.circular(8.0),
                           image: DecorationImage(
                             fit: BoxFit.cover,
-                            image: NetworkImage(item.imageUrl), // Gunakan imageUrl dari objek DonationHistory
+                            image: NetworkImage(item.imageUrl), 
                           ),
                         ),
                       ),

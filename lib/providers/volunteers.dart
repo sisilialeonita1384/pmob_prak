@@ -37,6 +37,7 @@ class Volunteers with ChangeNotifier {
   String city,
   String reason,
   String articleTitle,
+  String imageUrl,
 ) async {
   try {
     await _firestore.collection('volunteers').add({
@@ -47,13 +48,14 @@ class Volunteers with ChangeNotifier {
       'city': city,
       'reason': reason,
       'articleTitle': articleTitle,
+      'imageUrl': imageUrl,
     });
 
     // Save to volunteer_history
     final history = VolunteerHistory(
       title: articleTitle,
       registeredAt: DateTime.now(),
-      imageUrl: 'image_url_here', // Provide image URL here
+      imageUrl: imageUrl, // Provide image URL here
     );
     await _firestore.collection('volunteer_history').add(history.toMap());
 

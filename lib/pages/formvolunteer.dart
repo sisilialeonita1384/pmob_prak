@@ -1,10 +1,13 @@
-import 'package:education_app/models/vol_article.dart';
+import 'package:education_app/pages/history.dart';
 import 'package:education_app/providers/volunteers.dart';
+import 'package:education_app/models/vol_article.dart';
 import 'package:flutter/material.dart';
 
 class VolunteerFormPage extends StatefulWidget {
   final String title;
-  const VolunteerFormPage({super.key, required this.title});
+  final String imageUrl;
+  const VolunteerFormPage(
+      {super.key, required this.title, required this.imageUrl});
 
   @override
   _VolunteerFormPageState createState() => _VolunteerFormPageState();
@@ -17,11 +20,6 @@ class _VolunteerFormPageState extends State<VolunteerFormPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController ageController = TextEditingController();
   final TextEditingController reasonController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   String? _selectedProvince;
   String? _selectedCity;
@@ -116,307 +114,322 @@ class _VolunteerFormPageState extends State<VolunteerFormPage> {
           ),
         ),
         home: Scaffold(
-          appBar: AppBar(
-            leading: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: const Icon(
-                Icons.arrow_back,
-                color: Colors.white,
+            appBar: AppBar(
+              leading: IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: const Icon(
+                  Icons.arrow_back,
+                  color: Colors.white,
+                ),
               ),
-            ),
-            title: const Text(
-              'Join Volunteer',
-              style: TextStyle(color: Colors.white),
-            ),
-            backgroundColor: Colors.transparent,
-            flexibleSpace: Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomLeft,
-                  colors: [
-                    Color.fromRGBO(10, 99, 61, 50),
-                    Color.fromRGBO(78, 138, 103, 50),
-                  ],
+              title: const Text(
+                'Join Volunteer',
+                style: TextStyle(color: Colors.white),
+              ),
+              backgroundColor: Colors.transparent,
+              flexibleSpace: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomLeft,
+                    colors: [
+                      Color.fromRGBO(10, 99, 61, 50),
+                      Color.fromRGBO(78, 138, 103, 50),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          backgroundColor: Color.fromRGBO(251, 241, 221, 50),
-          body: Container(
-            margin: EdgeInsets.only(top: 20.0),
-            padding: const EdgeInsets.all(20.0),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              FutureBuilder<List<ArtikelVolunteer>>(
-                future: controller.getVolunteerArticles(),
-                builder: (context, snapshot) {
-                  return Column(
+            backgroundColor: Color.fromRGBO(251, 241, 221, 1),
+            body: SingleChildScrollView(
+              child: Container(
+                margin: EdgeInsets.only(top: 20.0),
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Register for ${widget.title}',
+                        '${widget.title}',
                         style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Color.fromRGBO(10, 99, 61, 50)),
-                      ),
-                      SizedBox(height: 10),
-                    ],
-                  );
-                },
-              ),
-              SizedBox(height: 20),
-              Form(
-                key: _formKey,
-                child: ListView(
-                  shrinkWrap: true,
-                  children: [
-                    _buildShadowedTextField(
-                      controller: fullNameController,
-                      labelText: 'Full Name',
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your full name';
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: 30.0),
-                    _buildShadowedTextField(
-                      controller: emailController,
-                      labelText: 'E-mail',
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your email';
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: 30.0),
-                    _buildShadowedTextField(
-                      controller: ageController,
-                      labelText: 'Age',
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your age';
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: 30.0),
-                    _buildShadowedDropdown(
-                      value: _selectedProvince,
-                      items: _provinceCityMap.keys
-                          .map((province) => DropdownMenuItem<String>(
-                                value: province,
-                                child: Text(province),
-                              ))
-                          .toList(),
-                      labelText: 'Province',
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedProvince = value;
-                          _selectedCity = null;
-                        });
-                      },
-                      validator: (value) {
-                        if (value == null) {
-                          return 'Please select your province';
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: 30.0),
-                    _buildShadowedDropdown(
-                      value: _selectedCity,
-                      items: (_selectedProvince != null
-                              ? _provinceCityMap[_selectedProvince]!
-                              : [])
-                          .map((city) => DropdownMenuItem<String>(
-                                value: city,
-                                child: Text(city),
-                              ))
-                          .toList(),
-                      labelText: 'City',
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedCity = value;
-                        });
-                      },
-                      validator: (value) {
-                        if (value == null) {
-                          return 'Please select your city';
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: 30.0),
-                    _buildShadowedTextField(
-                      controller: reasonController,
-                      labelText: 'Reason for Volunteering',
-                      maxLines: 4,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your reason for volunteering';
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: 45.0),
-                    ElevatedButton(
-                      onPressed: () async {
-                        if (_formKey.currentState!.validate()) {
-                          try {
-                            await controller.addVolunteer(
-                              fullNameController.text,
-                              emailController.text,
-                              ageController.text,
-                              _selectedProvince as String,
-                              _selectedCity as String,
-                              reasonController.text,
-                              widget.title,
-                            );
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return Dialog(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20.0),
-                                  ),
-                                  child: Container(
-                                    padding: EdgeInsets.all(20.0),
-                                    decoration: BoxDecoration(
-                                      color: Color.fromRGBO(251, 241, 221, 50),
-                                      borderRadius: BorderRadius.circular(20.0),
-                                    ),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        const Icon(
-                                          Icons.check_circle_outline,
-                                          size: 60.0,
-                                          color: Color.fromRGBO(10, 99, 61, 50),
-                                        ),
-                                        SizedBox(height: 20.0),
-                                        const Text(
-                                          'Volunteer Registered Successfully!',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            fontSize: 18.0,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        SizedBox(height: 10.0),
-                                        const Text(
-                                          'The invitation will be sent via email.',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            fontSize: 14.0,
-                                          ),
-                                        ),
-                                        SizedBox(height: 20.0),
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor:
-                                                Color.fromRGBO(10, 99, 61, 50),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(20.0),
-                                            ),
-                                          ),
-                                          child: const Text(
-                                            'OK',
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            );
-                          } catch (error) {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return Dialog(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20.0),
-                                  ),
-                                  child: Container(
-                                    padding: EdgeInsets.all(20.0),
-                                    decoration: BoxDecoration(
-                                      color: Color.fromRGBO(251, 241, 221, 50),
-                                      borderRadius: BorderRadius.circular(20.0),
-                                    ),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        const Icon(
-                                          Icons.error_outline,
-                                          size: 60.0,
-                                          color: Colors.red,
-                                        ),
-                                        SizedBox(height: 20.0),
-                                        const Text(
-                                          'Failed to Register Volunteer',
-                                          style: TextStyle(
-                                            fontSize: 18.0,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        SizedBox(height: 20.0),
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.red,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(20.0),
-                                            ),
-                                          ),
-                                          child: const Text('OK'),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            );
-                          }
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromRGBO(10, 99, 61, 50),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                        padding: EdgeInsets.symmetric(vertical: 15.0),
-                      ),
-                      child: const Text(
-                        'Submit',
-                        style: TextStyle(
-                          fontSize: 18.0,
+                          fontSize: 20,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: Color.fromRGBO(10, 99, 61, 50),
                         ),
                       ),
-                    )
-                  ],
-                ),
+                      SizedBox(height: 20),
+                      Form(
+                        key: _formKey,
+                        child: Column(
+                          children: [
+                            _buildShadowedTextField(
+                              controller: fullNameController,
+                              labelText: 'Full Name',
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter your full name';
+                                }
+                                return null;
+                              },
+                            ),
+                            SizedBox(height: 30.0),
+                            _buildShadowedTextField(
+                              controller: emailController,
+                              labelText: 'E-mail',
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter your email';
+                                }
+                                return null;
+                              },
+                            ),
+                            SizedBox(height: 30.0),
+                            _buildShadowedTextField(
+                              controller: ageController,
+                              labelText: 'Age',
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter your age';
+                                }
+                                return null;
+                              },
+                            ),
+                            SizedBox(height: 30.0),
+                            _buildShadowedDropdown(
+                              value: _selectedProvince,
+                              items: _provinceCityMap.keys
+                                  .map((province) => DropdownMenuItem<String>(
+                                        value: province,
+                                        child: Text(province),
+                                      ))
+                                  .toList(),
+                              labelText: 'Province',
+                              onChanged: (value) {
+                                setState(() {
+                                  _selectedProvince = value;
+                                  _selectedCity = null;
+                                });
+                              },
+                              validator: (value) {
+                                if (value == null) {
+                                  return 'Please select your province';
+                                }
+                                return null;
+                              },
+                            ),
+                            SizedBox(height: 30.0),
+                            _buildShadowedDropdown(
+                              value: _selectedCity,
+                              items: (_selectedProvince != null
+                                      ? _provinceCityMap[_selectedProvince]!
+                                      : [])
+                                  .map((city) => DropdownMenuItem<String>(
+                                        value: city,
+                                        child: Text(city),
+                                      ))
+                                  .toList(),
+                              labelText: 'City',
+                              onChanged: (value) {
+                                setState(() {
+                                  _selectedCity = value;
+                                });
+                              },
+                              validator: (value) {
+                                if (value == null) {
+                                  return 'Please select your city';
+                                }
+                                return null;
+                              },
+                            ),
+                            SizedBox(height: 30.0),
+                            _buildShadowedTextField(
+                              controller: reasonController,
+                              labelText: 'Reason for Volunteering',
+                              maxLines: 4,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter your reason for volunteering';
+                                }
+                                return null;
+                              },
+                            ),
+                            SizedBox(height: 45.0),
+                            ElevatedButton(
+                              onPressed: () async {
+                                if (_formKey.currentState!.validate()) {
+                                  try {
+                                    await controller.addVolunteer(
+                                      fullNameController.text,
+                                      emailController.text,
+                                      ageController.text,
+                                      _selectedProvince as String,
+                                      _selectedCity as String,
+                                      reasonController.text,
+                                      widget.title,
+                                      widget.imageUrl,
+                                    );
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return Dialog(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(20.0),
+                                          ),
+                                          child: Container(
+                                            padding: EdgeInsets.all(20.0),
+                                            decoration: BoxDecoration(
+                                              color: const Color.fromRGBO(
+                                                  251, 241, 221, 1),
+                                              borderRadius:
+                                                  BorderRadius.circular(20.0),
+                                            ),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                const Icon(
+                                                  Icons.check_circle_outline,
+                                                  size: 60.0,
+                                                  color: Color.fromRGBO(
+                                                      10, 99, 61, 50),
+                                                ),
+                                                SizedBox(height: 20.0),
+                                                const Text(
+                                                  'Volunteer Registered Successfully!',
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                    fontSize: 18.0,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                SizedBox(height: 10.0),
+                                                const Text(
+                                                  'The invitation will be sent via email.',
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                    fontSize: 14.0,
+                                                  ),
+                                                ),
+                                                SizedBox(height: 20.0),
+                                                Container(
+                                                  width: double.maxFinite,
+                                                  child: ElevatedButton(
+                                                    onPressed: () {
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                HistoryPage()),
+                                                      );
+                                                    },
+                                                    style:
+                                                        ElevatedButton.styleFrom(
+                                                      backgroundColor:
+                                                          const Color.fromRGBO(
+                                                              10, 99, 61, 50),
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                                20.0),
+                                                      ),
+                                                    ),
+                                                    child: const Text(
+                                                      'OK',
+                                                      style: TextStyle(
+                                                          color: Colors.white),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  } catch (error) {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return Dialog(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(20.0),
+                                          ),
+                                          child: Container(
+                                            padding: EdgeInsets.all(20.0),
+                                            decoration: BoxDecoration(
+                                              color: const Color.fromRGBO(
+                                                  251, 241, 221, 50),
+                                              borderRadius:
+                                                  BorderRadius.circular(20.0),
+                                            ),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                const Icon(
+                                                  Icons.error_outline,
+                                                  size: 60.0,
+                                                  color: Colors.red,
+                                                ),
+                                                SizedBox(height: 20.0),
+                                                const Text(
+                                                  'Failed to Register Volunteer',
+                                                  style: TextStyle(
+                                                    fontSize: 18.0,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                SizedBox(height: 20.0),
+                                                ElevatedButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                    backgroundColor: Colors.red,
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              20.0),
+                                                    ),
+                                                  ),
+                                                  child: const Text('OK'),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  }
+                                }
+                              },
+                              style: ButtonStyle(
+                                fixedSize:
+                                    MaterialStateProperty.all(Size(120, 40)),
+                                backgroundColor: MaterialStateProperty.all(
+                                    Color.fromRGBO(10, 99, 61, 50)),
+                                overlayColor: MaterialStateProperty.all(
+                                    Color.fromRGBO(78, 138, 103, 50)),
+                              ),
+                              child: const Text(
+                                'Submit',
+                                style: TextStyle(
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ]),
               ),
-            ]),
-          ),
-        ));
+            )));
   }
 
   Widget _buildShadowedTextField({
@@ -483,12 +496,11 @@ class _VolunteerFormPageState extends State<VolunteerFormPage> {
       ),
     );
   }
-
-  void showSuccessDialog(BuildContext context) {}
 }
 
 void main() {
   runApp(VolunteerFormPage(
     title: '',
+    imageUrl: '',
   ));
 }

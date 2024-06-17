@@ -1,6 +1,6 @@
-import 'package:education_app/widgets/enroll_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:education_app/widgets/enroll_bottom_sheet.dart';
 
 class VolunteerArticleDetailPage extends StatelessWidget {
   final String title;
@@ -20,54 +20,55 @@ class VolunteerArticleDetailPage extends StatelessWidget {
       value: SystemUiOverlayStyle.dark,
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: SingleChildScrollView(
+        body: NestedScrollView(
           physics: BouncingScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Stack(
-                children: [
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 20, left: 45, bottom: 30),
-                      child: Text(
-                        title,
-                        textAlign: TextAlign.start,
-                        style: Theme.of(context)
-                            .textTheme
-                            .displayMedium
-                            ?.copyWith(fontSize: 17),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    top: 20,
-                    left: 0,
-                    child: IconButton(
-                      icon: Icon(Icons.arrow_back),
+          headerSliverBuilder: (context, innerBoxIsScrolled) => [
+            SliverAppBar(
+              expandedHeight: 80,
+              backgroundColor: Color.fromRGBO(78, 138, 103, 50),
+              pinned: true,
+              automaticallyImplyLeading: false,
+              flexibleSpace: SafeArea(
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.arrow_back, color: Colors.white,),
                       onPressed: () => Navigator.pop(context),
                     ),
-                  ),
-                ],
-              ),
-              Container(
-                margin: EdgeInsets.only(top: 40),
-                child: Image.network(image),
-              ),
-              
-              Container(
-                margin: EdgeInsets.only(left: 20, right: 20, bottom: 20),
-                child: Text(
-                  description,
-                  textAlign: TextAlign.justify,
-                  style: TextStyle(fontSize: 14),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Text(
+                          title,
+                          textAlign: TextAlign.start,
+                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              SizedBox(
-                height: MediaQuery.of(context).viewInsets.bottom,
-              ),
-            ],
+            ),
+          ],
+          body: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Container(
+                  margin: EdgeInsets.only(top: 40),
+                  child: Image.network(image),
+                ),
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                  child: Text(
+                    description,
+                    textAlign: TextAlign.justify,
+                    style: TextStyle(fontSize: 14),
+                  ),
+                ),
+                SizedBox(height: 80), // Tinggi untuk menampung BottomSheet di bagian bawah
+              ],
+            ),
           ),
         ),
         bottomSheet: BottomSheet(
@@ -77,7 +78,7 @@ class VolunteerArticleDetailPage extends StatelessWidget {
           builder: (context) {
             return SizedBox(
               height: 80,
-              child: EnrollBottomSheet(title: title), 
+              child: EnrollBottomSheet(title: title, imageUrl: image),
             );
           },
         ),

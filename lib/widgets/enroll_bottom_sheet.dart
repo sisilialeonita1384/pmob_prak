@@ -4,9 +4,10 @@ import 'custom_icon_bottom.dart';
 import 'package:education_app/providers/vol_articles.dart';
 
 class EnrollBottomSheet extends StatefulWidget {
-  final String title; 
+  final String title;
+  final String imageUrl; // Tambahkan properti imageUrl
 
-  const EnrollBottomSheet({Key? key, required this.title}) : super(key: key);
+  const EnrollBottomSheet({Key? key, required this.title, required this.imageUrl}) : super(key: key);
 
   @override
   _EnrollBottomSheetState createState() => _EnrollBottomSheetState();
@@ -27,7 +28,7 @@ class _EnrollBottomSheetState extends State<EnrollBottomSheet> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => VolunteerFormPage(title: widget.title), // Akses widget.title
+                    builder: (context) => VolunteerFormPage(title: widget.title, imageUrl: widget.imageUrl), // Akses widget.title
                   ),
                 );
               },
