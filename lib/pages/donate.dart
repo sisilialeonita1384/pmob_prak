@@ -29,6 +29,7 @@ class _DonationPageState extends State<DonationPage> {
           'Donate Now',
           style: TextStyle(color: Colors.white),
         ),
+        centerTitle: true,
         backgroundColor: Colors.transparent,
         flexibleSpace: Container(
           decoration: const BoxDecoration(

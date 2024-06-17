@@ -9,8 +9,6 @@ import 'package:education_app/pages/add_edu_article.dart';
 import 'package:education_app/pages/add_vol_article.dart';
 import 'package:education_app/pages/add_don_article.dart';
 import 'package:education_app/pages/detail_article.dart';
-import 'package:education_app/models/category.dart';
-import 'package:education_app/pages/detail_vol_articles.dart';
 
 class HomeBody extends StatefulWidget {
   HomeBody({Key? key}) : super(key: key);
@@ -207,7 +205,7 @@ class _HomeBodyState extends State<HomeBody> {
                     children: [
                       Flexible(
                         child: Container(
-                          margin: EdgeInsets.only(left: 140),
+                          margin: EdgeInsets.only(left: 130),
                           child: const Text(
                             "EcoAction",
                             textAlign: TextAlign.center,
