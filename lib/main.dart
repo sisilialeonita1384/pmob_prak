@@ -25,6 +25,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  
   runApp(MyApp());
 }
 
@@ -44,8 +45,8 @@ class MyApp extends StatelessWidget {
           create: (context) => DonationArticles(),
           child: AddDonationArticlePage(),
         ),
-         ChangeNotifierProvider(create: (_) => Volunteers()),
-         ChangeNotifierProvider(create: (_) => Donations()),
+        ChangeNotifierProvider(create: (_) => Volunteers()),
+        ChangeNotifierProvider(create: (_) => Donations()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

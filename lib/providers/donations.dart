@@ -6,6 +6,34 @@ import '../models/history_donations.dart';
 class Donations with ChangeNotifier {
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  Donations() {
+    fixDonationHistoryData();
+  }
+
+  Future<void> fixDonationHistoryData() async {
+    try {
+      QuerySnapshot snapshot = await _firestore.collection('donation_history').get();
+      for (var doc in snapshot.docs) {
+        var data = doc.data() as Map<String, dynamic>;
+
+        if (data['registeredAt'] is String) {
+          DateTime registeredAt = DateTime.parse(data['registeredAt']);
+          await doc.reference.update({
+            'registeredAt': Timestamp.fromDate(registeredAt),
+          });
+        }
+
+        if (data['amount'] == null) {
+          await doc.reference.update({
+            'amount': 0.0,
+          });
+        }
+      }
+    } catch (error) {
+      print('Error fixing donation history data: $error');
+    }
+  }
+
   Future<List<Donation>> getDonations() async {
     List<Donation> donations = [];
     try {
@@ -44,10 +72,11 @@ class Donations with ChangeNotifier {
       });
 
       // Save to donation_history
+      final double amount = double.tryParse(payment) ?? 0.0;
       final history = DonationHistory(
         title: articleTitle,
         registeredAt: DateTime.now(),
-        amount: double.parse(payment),
+        amount: amount,
         imageUrl: 'image_url_here', // Provide image URL here
       );
       await _firestore.collection('donation_history').add(history.toMap());
@@ -62,14 +91,11 @@ class Donations with ChangeNotifier {
     try {
       final snapshot = await _firestore.collection('donation_history').get();
       return snapshot.docs
-          .map((doc) => DonationHistory.fromMap(doc.data()))
+          .map((doc) => DonationHistory.fromMap(doc.data() as Map<String, dynamic>))
           .toList();
     } catch (error) {
       print('Error getting donation history: $error');
       return [];
     }
   }
-  getDonationArticles() {}
 }
-
-
