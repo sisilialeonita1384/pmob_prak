@@ -10,11 +10,9 @@ class UpdateProfilePage extends StatefulWidget {
 
 class _UpdateProfilePageState extends State<UpdateProfilePage> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _currentPasswordController =
-      TextEditingController();
+  final TextEditingController _currentPasswordController = TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -33,7 +31,17 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Update Profile'),
+        title: Container(
+          margin: EdgeInsets.only(left: 50),
+          child: const Text('Update Profile', 
+          style: TextStyle(color: Colors.white),),
+        ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white), 
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
         backgroundColor: Colors.transparent,
         flexibleSpace: Container(
           decoration: const BoxDecoration(
@@ -48,8 +56,8 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
           ),
         ),
       ),
-      backgroundColor: const Color.fromRGBO(251, 241, 221, 50),
-      body: Padding(
+      backgroundColor: const Color.fromRGBO(251, 241, 221, 1),
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
         child: Form(
           key: _formKey,
@@ -58,8 +66,13 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
             children: <Widget>[
               TextFormField(
                 controller: _usernameController,
-                decoration: InputDecoration(
+                cursorColor: Colors.black,
+                decoration: const InputDecoration(
                   labelText: 'Username',
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black),
+                  ),
+                  labelStyle: TextStyle(color: Colors.black),
                 ),
                 validator: (value) {
                   if (value!.isEmpty) {
@@ -71,9 +84,14 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
               const SizedBox(height: 20),
               TextFormField(
                 controller: _currentPasswordController,
+                cursorColor: Colors.black,
                 obscureText: true,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Current Password',
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black),
+                  ),
+                  labelStyle: TextStyle(color: Colors.black),
                 ),
                 validator: (value) {
                   if (value!.isEmpty) {
@@ -85,9 +103,14 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
               const SizedBox(height: 20),
               TextFormField(
                 controller: _newPasswordController,
+                cursorColor: Colors.black,
                 obscureText: true,
                 decoration: const InputDecoration(
                   labelText: 'New Password',
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black),
+                  ),
+                  labelStyle: TextStyle(color: Colors.black),
                 ),
                 validator: (value) {
                   if (value!.isNotEmpty && value.length < 6) {
@@ -99,13 +122,17 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
               const SizedBox(height: 20),
               TextFormField(
                 controller: _confirmPasswordController,
+                cursorColor: Colors.black,
                 obscureText: true,
                 decoration: const InputDecoration(
                   labelText: 'Confirm New Password',
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black),
+                  ),
+                  labelStyle: TextStyle(color: Colors.black),
                 ),
                 validator: (value) {
-                  if (value!.isNotEmpty &&
-                      value != _newPasswordController.text) {
+                  if (value!.isNotEmpty && value != _newPasswordController.text) {
                     return 'Passwords do not match';
                   }
                   return null;
@@ -143,14 +170,11 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
       try {
         final User? user = _auth.currentUser;
 
-        // Update username
         if (_usernameController.text.trim().isNotEmpty) {
           await user!.updateDisplayName(_usernameController.text.trim());
         }
 
-        // Update password
-        if (_currentPasswordController.text.isNotEmpty &&
-            _newPasswordController.text.isNotEmpty) {
+        if (_currentPasswordController.text.isNotEmpty && _newPasswordController.text.isNotEmpty) {
           final credential = EmailAuthProvider.credential(
             email: user!.email!,
             password: _currentPasswordController.text.trim(),
@@ -162,12 +186,10 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Profile updated successfully'),
-            backgroundColor: Color.fromRGBO(
-                78, 138, 103, 50), 
+            backgroundColor: Color.fromRGBO(78, 138, 103, 50),
           ),
         );
 
-        // Clear input fields
         _usernameController.clear();
         _currentPasswordController.clear();
         _newPasswordController.clear();
@@ -177,33 +199,29 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
           _isProcessing = false;
         });
 
-        // Navigate back to profile page
         Navigator.pop(context);
       } catch (error) {
         setState(() {
           _isProcessing = false;
         });
 
-        // Show error dialog
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
             title: const Text('Authentication Error'),
-            content: const Text(
-                'Failed to authenticate user. Please re-enter your current password and try again.'),
+            content: const Text('Failed to authenticate user. Please re-enter your current password and try again.'),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: Text(
+                child: const Text(
                   'OK',
                   style: TextStyle(color: Color.fromRGBO(10, 99, 61, 50)),
                 ),
               ),
             ],
-            backgroundColor: const Color.fromRGBO(
-                251, 241, 221, 50), // Sesuaikan dengan warna background halaman
+            backgroundColor: const Color.fromRGBO(251, 241, 221, 50),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15.0),
             ),
