@@ -9,7 +9,7 @@ class SignInPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -79,6 +79,7 @@ class __FormContentState extends State<_FormContent> {
               },
               decoration: InputDecoration(
                 labelText: 'Email',
+                labelStyle: TextStyle(color: Colors.green.shade900),
                 hintText: 'Enter your email',
                 prefixIcon:
                     Icon(Icons.email_outlined, color: Colors.green.shade900),
@@ -115,6 +116,7 @@ class __FormContentState extends State<_FormContent> {
               obscureText: !_isPasswordVisible,
               decoration: InputDecoration(
                 labelText: 'Password',
+                labelStyle: TextStyle(color: Colors.green.shade900),
                 hintText: 'Enter your password',
                 prefixIcon: const Icon(Icons.lock_outline_rounded,
                     color: Color.fromARGB(255, 27, 94, 32)),
@@ -161,6 +163,9 @@ class __FormContentState extends State<_FormContent> {
               controlAffinity: ListTileControlAffinity.leading,
               dense: true,
               contentPadding: EdgeInsets.all(0),
+              activeColor:
+                  Colors.green.shade900, 
+              checkColor: Colors.white, 
             ),
             _gap(),
             SizedBox(
@@ -212,7 +217,7 @@ class __FormContentState extends State<_FormContent> {
                     );
                   }
                 },
-                child: Padding(
+                child: const Padding(
                   padding: EdgeInsets.all(10.0),
                   child: Text(
                     'Sign in',

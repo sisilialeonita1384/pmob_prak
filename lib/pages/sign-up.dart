@@ -83,7 +83,7 @@ class _FormContentState extends State<_FormContent> {
               cursorColor: Colors.green.shade900,
               decoration: InputDecoration(
                 labelText: 'Username',
-                labelStyle: TextStyle(color: Colors.black.withOpacity(0.75)),
+                labelStyle: TextStyle(color: Colors.green.shade900),
                 hintText: 'Enter your username',
                 prefixIcon: Icon(Icons.person, color: Colors.green.shade900),
                 border: OutlineInputBorder(
@@ -122,7 +122,7 @@ class _FormContentState extends State<_FormContent> {
               },
               decoration: InputDecoration(
                 labelText: 'Email',
-                labelStyle: TextStyle(color: Colors.black.withOpacity(0.75)),
+                labelStyle: TextStyle(color: Colors.green.shade900),
                 hintText: 'Enter your email',
                 prefixIcon:
                     Icon(Icons.email_outlined, color: Colors.green.shade900),
@@ -159,7 +159,7 @@ class _FormContentState extends State<_FormContent> {
               obscureText: !_isPasswordVisible,
               decoration: InputDecoration(
                 labelText: 'Password',
-                labelStyle: TextStyle(color: Colors.black.withOpacity(0.75)),
+                labelStyle: TextStyle(color: Colors.green.shade900),
                 hintText: 'Enter your password',
                 prefixIcon: const Icon(Icons.lock_outline_rounded,
                     color: Color.fromARGB(255, 27, 94, 32)),
@@ -312,7 +312,7 @@ class _FormContentState extends State<_FormContent> {
                       final user = <String, dynamic>{
                         "username": _usernameController.text,
                         "email": _emailController.text,
-                        "password": _passwordController.text,
+                        "isAdmin": false,
                       };
                       db
                           .collection("users")

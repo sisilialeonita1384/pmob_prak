@@ -29,6 +29,7 @@ class _HistoryPageState extends State<HistoryPage> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(120.0),
         child: AppBar(
+          automaticallyImplyLeading: false,
           backgroundColor: Colors.transparent,
           flexibleSpace: Container(
             decoration: const BoxDecoration(

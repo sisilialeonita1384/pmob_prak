@@ -25,6 +25,7 @@ class _DonationPageState extends State<DonationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Text(
           'Donate Now',
           style: TextStyle(color: Colors.white),

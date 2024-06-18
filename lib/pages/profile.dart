@@ -46,7 +46,8 @@ class _ProfilePageState extends State<ProfilePage> {
       return "";
     }
   }
-  void signOut() async {
+
+  Future<void> signOut() async {
     await FirebaseAuth.instance.signOut();
     Navigator.pushReplacement(
       context,
@@ -90,10 +91,53 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
+ void showSignOutConfirmationDialog() {
+  Color dialogBackgroundColor = const Color.fromRGBO(10, 99, 61, 50);
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        backgroundColor: dialogBackgroundColor,
+        title: const Text(
+          'Confirm Sign Out',
+          style: TextStyle(color: Colors.white), 
+        ),
+        content: const Text(
+          'Are you sure you want to sign out?',
+          style: TextStyle(color: Colors.white70), 
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: const Text(
+              'Cancel',
+              style: TextStyle(color: Colors.white),
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          TextButton(
+            child: const Text(
+              'Sign Out',
+              style: TextStyle(color: Colors.white),
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+              signOut();
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Text(
           'Account',
           style: TextStyle(color: Colors.white),
@@ -239,7 +283,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     title: const Text("Sign Out",
                                         style: TextStyle(
                                             color: Colors.white, fontSize: 20)),
-                                    onTap: signOut,
+                                    onTap: showSignOutConfirmationDialog,
                                     trailing: const Icon(Icons.arrow_forward,
                                         color: Colors.white),
                                   ),

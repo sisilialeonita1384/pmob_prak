@@ -20,12 +20,14 @@ class HomeBody extends StatefulWidget {
 class _HomeBodyState extends State<HomeBody> {
   List<Artikel> articles = [];
   List<ArtikelVolunteer> volunteerArticles = [];
+  bool isAdmin = false;
 
   @override
   void initState() {
     super.initState();
     fetchArticles();
     fetchVolunteerArticles();
+    checkAdminStatus();
   }
 
   Future<void> fetchArticles() async {
@@ -49,6 +51,21 @@ class _HomeBodyState extends State<HomeBody> {
               ))
           .toList();
     });
+  }
+
+  Future<void> checkAdminStatus() async {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser != null) {
+      final userDoc = await FirebaseFirestore.instance
+          .collection("users")
+          .doc(currentUser.email)
+          .get();
+      if (userDoc.exists) {
+        setState(() {
+          isAdmin = userDoc.data()?['isAdmin'] ?? false;
+        });
+      }
+    }
   }
 
   void _showArticleTypeDialog(BuildContext context) {
@@ -176,29 +193,27 @@ class _HomeBodyState extends State<HomeBody> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
-        children: [
-          Container(
-            padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(20),
-                bottomRight: Radius.circular(20),
-              ),
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomLeft,
-                colors: [
-                  Color.fromRGBO(10, 99, 61, 50),
-                  Color.fromRGBO(78, 138, 103, 50),
-                ],
-              ),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        toolbarHeight: 170,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomLeft,
+              colors: [
+                Color.fromRGBO(10, 99, 61, 50),
+                Color.fromRGBO(78, 138, 103, 50),
+              ],
             ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.only(top: 30, left: 18, right: 20),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  margin: EdgeInsets.only(top: 10),
+                  margin: EdgeInsets.only(top: 15),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -221,7 +236,7 @@ class _HomeBodyState extends State<HomeBody> {
                 ),
                 SizedBox(height: 30),
                 Container(
-                  margin: EdgeInsets.only(bottom: 20),
+                  margin: EdgeInsets.only(bottom: 20, left: 10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -247,13 +262,17 @@ class _HomeBodyState extends State<HomeBody> {
                       FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
                         future: getUserDetails(),
                         builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
                             return const CircleAvatar(
                               radius: 30,
-                              backgroundImage: AssetImage('assets/default_avatar.png'),
+                              backgroundImage:
+                                  AssetImage('assets/default_avatar.png'),
                             );
                           }
-                          final userPhotoUrl = snapshot.data?.data()?['photoUrl'] ?? 'assets/default_avatar.png';
+                          final userPhotoUrl =
+                              snapshot.data?.data()?['photoUrl'] ??
+                                  'assets/default_avatar.png';
                           return CircleAvatar(
                             radius: 30,
                             backgroundImage: NetworkImage(userPhotoUrl),
@@ -267,6 +286,10 @@ class _HomeBodyState extends State<HomeBody> {
               ],
             ),
           ),
+        ),
+      ),
+      body: ListView(
+        children: [
           Column(
             children: [
               Container(
@@ -282,9 +305,11 @@ class _HomeBodyState extends State<HomeBody> {
               ),
               Container(
                 margin: EdgeInsets.only(top: 10),
-                height: 200,  
+                height: 200,
                 child: articles.isEmpty
-                    ? Center(child: CircularProgressIndicator(color: Color.fromRGBO(10, 99, 61, 50)))
+                    ? const Center(
+                        child: CircularProgressIndicator(
+                            color: Color.fromRGBO(10, 99, 61, 50)))
                     : CarouselSlider.builder(
                         itemCount: articles.length,
                         itemBuilder: (BuildContext context, int index,
@@ -350,7 +375,8 @@ class _HomeBodyState extends State<HomeBody> {
                           reverse: false,
                           autoPlay: true,
                           autoPlayInterval: Duration(seconds: 3),
-                          autoPlayAnimationDuration: Duration(milliseconds: 800),
+                          autoPlayAnimationDuration:
+                              Duration(milliseconds: 800),
                           autoPlayCurve: Curves.fastOutSlowIn,
                           enlargeCenterPage: true,
                           scrollDirection: Axis.horizontal,
@@ -380,11 +406,14 @@ class _HomeBodyState extends State<HomeBody> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: volunteerArticles.isEmpty
-                    ? const Center(child: CircularProgressIndicator(color: Color.fromRGBO(10, 99, 61, 50)))
+                    ? const Center(
+                        child: CircularProgressIndicator(
+                            color: Color.fromRGBO(10, 99, 61, 50)))
                     : GridView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
                           childAspectRatio: 0.75,
                           crossAxisSpacing: 10,
@@ -431,7 +460,8 @@ class _HomeBodyState extends State<HomeBody> {
                                       height: 120,
                                       width: double.infinity,
                                       fit: BoxFit.cover,
-                                      errorBuilder: (context, error, stackTrace) {
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
                                         return Container(
                                           height: 120,
                                           color: Colors.grey,
@@ -468,14 +498,16 @@ class _HomeBodyState extends State<HomeBody> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Color.fromRGBO(78, 138, 103, 50),
-        splashColor: Color.fromRGBO(78, 138, 103, 50),
-        onPressed: () {
-          _showArticleTypeDialog(context);
-        },
-        child: Icon(Icons.edit, color: Colors.white),
-      ),
+      floatingActionButton: isAdmin
+          ? FloatingActionButton(
+              backgroundColor: Color.fromRGBO(78, 138, 103, 50),
+              splashColor: Color.fromRGBO(78, 138, 103, 50),
+              onPressed: () {
+                _showArticleTypeDialog(context);
+              },
+              child: Icon(Icons.edit, color: Colors.white),
+            )
+          : null,
     );
   }
 }

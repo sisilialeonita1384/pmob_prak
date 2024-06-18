@@ -14,6 +14,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
+  PageController _pageController = PageController();
 
   List<Widget> pages = [
     HomeBody(),
@@ -21,6 +22,13 @@ class _HomePageState extends State<HomePage> {
     DonationPage(),
     ProfilePage(),
   ];
+
+  void onTabTapped(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+    _pageController.jumpToPage(index);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,11 +41,7 @@ class _HomePageState extends State<HomePage> {
           backgroundColor: Color.fromRGBO(251, 241, 221, 50),
           elevation: 0,
           currentIndex: _currentIndex,
-          onTap: (int index) {
-            setState(() {
-              _currentIndex = index;
-            });
-          },
+          onTap: onTabTapped,
           items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.home_outlined),
@@ -61,8 +65,13 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
-        body: IndexedStack(
-          index: _currentIndex,
+        body: PageView(
+          controller: _pageController,
+          onPageChanged: (index) {
+            setState(() {
+              _currentIndex = index;
+            });
+          },
           children: pages,
         ),
       ),
