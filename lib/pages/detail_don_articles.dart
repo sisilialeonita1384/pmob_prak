@@ -63,7 +63,7 @@ class DonationArticleDetailPage extends StatelessWidget {
                     style: TextStyle(fontSize: 14),
                   ),
                 ),
-                SizedBox(height: 80), // Space to accommodate BottomSheet at the bottom
+                SizedBox(height: 80), 
               ],
             ),
           ),

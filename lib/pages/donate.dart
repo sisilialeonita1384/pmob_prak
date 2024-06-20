@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:education_app/models/don_article.dart';
 import 'package:education_app/providers/don_articles.dart';
-import 'package:education_app/pages/detail_don_articles.dart'; // Import halaman detail artikel
+import 'package:education_app/pages/detail_don_articles.dart'; 
 
 class DonationPage extends StatefulWidget {
   @override

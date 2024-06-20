@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:education_app/providers/edu_articles.dart';
-import '../models/edu_article.dart'; // Sesuaikan dengan path model Artikel
+import '../models/edu_article.dart'; 
 
 class DetailArticlePage extends StatefulWidget {
   final Artikel article;
@@ -68,7 +68,7 @@ class _DetailArticlePageState extends State<DetailArticlePage> {
               child: Text(
                 widget.article.nameArticle,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),

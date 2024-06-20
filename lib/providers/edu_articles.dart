@@ -30,10 +30,8 @@ class Articles with ChangeNotifier {
       UploadTask uploadTask = reference.putData(imageData);
       TaskSnapshot snapshot = await uploadTask;
 
-      // Dapatkan URL download yang bisa diakses secara publik
       String downloadUrl = await snapshot.ref.getDownloadURL();
 
-      // Ubah URL menjadi bentuk umum yang tidak mengandung unsur Firebase Storage
       Uri uri = Uri.parse(downloadUrl);
       String generalUrl = '${uri.scheme}://${uri.host}${uri.path}?alt=media';
 

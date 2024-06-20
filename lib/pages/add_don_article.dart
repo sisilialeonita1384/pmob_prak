@@ -137,13 +137,10 @@ class _AddDonationArticlePageState extends State<AddDonationArticlePage> {
                     if (_formKey.currentState?.validate() ?? false) {
                       if (_image != null) {
                         try {
-                          // Upload image first to get the URL
                           String imageUrl = await Provider.of<DonationArticles>(
                                   context,
                                   listen: false)
                               .uploadImage(_image!);
-
-                          // Add article to Firestore with image URL
                           await Provider.of<DonationArticles>(context,
                                   listen: false)
                               .addArticle(

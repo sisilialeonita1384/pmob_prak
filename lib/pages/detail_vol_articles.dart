@@ -66,7 +66,7 @@ class VolunteerArticleDetailPage extends StatelessWidget {
                     style: TextStyle(fontSize: 14),
                   ),
                 ),
-                SizedBox(height: 80), // Tinggi untuk menampung BottomSheet di bagian bawah
+                SizedBox(height: 80), 
               ],
             ),
           ),

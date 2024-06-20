@@ -1,6 +1,4 @@
 import 'dart:typed_data';
-import 'package:education_app/pages/detail_article.dart';
-import 'package:education_app/pages/home_body.dart';
 import 'package:education_app/pages/homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -140,12 +138,9 @@ class _AddEducationArticlePageState extends State<AddEducationArticlePage> {
                     if (_formKey.currentState?.validate() ?? false) {
                       if (_image != null) {
                         try {
-                          // Upload image first to get the URL
                           String imageUrl = await Provider.of<Articles>(context,
                                   listen: false)
                               .uploadImage(_image!);
-
-                          // Add article to Firestore with image URL
                           await Provider.of<Articles>(context, listen: false)
                               .addArticle(
                             nameArticleController.text,

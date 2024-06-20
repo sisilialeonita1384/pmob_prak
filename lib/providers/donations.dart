@@ -87,13 +87,12 @@ class Donations with ChangeNotifier {
       // Menyimpan riwayat donasi ke koleksi 'users' berdasarkan email pengguna
       await _firestore.collection('users').doc(email).collection('donation_history').add(history.toMap());
 
-      notifyListeners(); // Pastikan listener diberitahu tentang perubahan
+      notifyListeners(); 
     } catch (error) {
       print('Error adding donation: $error');
-      throw error; // Lepaskan error untuk ditangani di UI
+      throw error; 
     }
   }
-
 
   Future<List<DonationHistory>> getDonationHistory(String userEmail) async {
   try {

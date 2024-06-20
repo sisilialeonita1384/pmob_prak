@@ -1,16 +1,11 @@
 import 'package:education_app/firebase_options.dart';
 import 'package:education_app/pages/add_don_article.dart';
 import 'package:education_app/pages/add_vol_article.dart';
-import 'package:education_app/pages/climatechange.dart';
-import 'package:education_app/pages/deforestation.dart';
-import 'package:education_app/pages/flood.dart';
-import 'package:education_app/pages/foodwaste.dart';
 import 'package:education_app/pages/history.dart';
 import 'package:education_app/pages/homepage.dart';
 import 'package:education_app/pages/sign-in.dart';
 import 'package:education_app/pages/sign-up.dart';
 import 'package:education_app/pages/splashscreen.dart';
-import 'package:education_app/pages/waste.dart';
 import 'package:education_app/providers/don_articles.dart';
 import 'package:education_app/providers/donations.dart';
 import 'package:education_app/providers/edu_articles.dart';
@@ -79,14 +74,6 @@ class MyApp extends StatelessWidget {
           "/signin": (context) => SignInPage(),
           "/signup": (context) => SignUpPage(),
           "/home": (context) => HomePage(),
-          "/history": (context) => HistoryPage(),
-          "/deforestation": (context) => DeforestationPage(),
-          "/climatechange": (context) => ClimateChangePage(),
-          "/flood": (context) => FloodPage(),
-          "/waste": (context) => WastePage(),
-          "/foodwaste": (context) => FoodWastePage(),
-          // "/profile": (context) => ProfilePage(),
-          // "/donate": (context) => DonationPage(),
         },
         initialRoute: "/splash",
       ),
