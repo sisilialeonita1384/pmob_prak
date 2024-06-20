@@ -19,7 +19,7 @@ class Volunteers with ChangeNotifier {
           province: doc['province'],
           city: doc['city'],
           reason: doc['reason'],
-          articleTitle: doc['articleTitle'], // Properti baru
+          articleTitle: doc['articleTitle'], 
         ));
       });
       return volunteers;
@@ -63,10 +63,10 @@ class Volunteers with ChangeNotifier {
       // Menyimpan riwayat volunteer ke koleksi 'users' berdasarkan email pengguna
       await _firestore.collection('users').doc(email).collection('volunteer_history').add(history.toMap());
 
-      notifyListeners(); // Pastikan listener diberitahu tentang perubahan
+      notifyListeners(); 
     } catch (error) {
       print('Error adding volunteer: $error');
-      throw error; // Lepaskan error untuk ditangani di UI
+      throw error; 
     }
   }
 
