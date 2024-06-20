@@ -90,7 +90,7 @@ class _AddVolunteerArticlePageState extends State<AddVolunteerArticlePage> {
             ),
           ),
         ),
-        backgroundColor: Color.fromRGBO(251, 241, 221, 50),
+        backgroundColor: Color.fromRGBO(251, 241, 221, 1),
         body: Container(
           margin: EdgeInsets.only(top: 20.0),
           padding: const EdgeInsets.all(20.0),

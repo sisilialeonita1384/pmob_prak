@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:education_app/pages/homepage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignUpPage extends StatelessWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -61,6 +62,23 @@ class _FormContentState extends State<_FormContent> {
   final _confirmPasswordController = TextEditingController();
   var db = FirebaseFirestore.instance;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadEmail();
+  }
+
+  Future<void> _loadEmail() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? email = prefs.getString('last_logged_in_email');
+    print('Loaded email: $email');
+    if (email != null) {
+      setState(() {
+        _emailController.text = email; 
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -271,6 +289,8 @@ class _FormContentState extends State<_FormContent> {
               controlAffinity: ListTileControlAffinity.leading,
               dense: true,
               contentPadding: const EdgeInsets.all(0),
+              activeColor:
+                  Colors.green.shade900, 
             ),
             SizedBox(height: 25),
             SizedBox(
