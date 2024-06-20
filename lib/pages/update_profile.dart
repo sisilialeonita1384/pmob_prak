@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UpdateProfilePage extends StatefulWidget {
   const UpdateProfilePage({Key? key}) : super(key: key);
@@ -15,6 +16,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   final TextEditingController _confirmPasswordController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   bool _isProcessing = false;
 
@@ -172,6 +174,9 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
 
         if (_usernameController.text.trim().isNotEmpty) {
           await user!.updateDisplayName(_usernameController.text.trim());
+          await _firestore.collection('users').doc(user.email).update({
+            'username': _usernameController.text.trim(),
+          });
         }
 
         if (_currentPasswordController.text.isNotEmpty && _newPasswordController.text.isNotEmpty) {

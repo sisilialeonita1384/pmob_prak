@@ -80,6 +80,12 @@ class _FormContentState extends State<_FormContent> {
     }
   }
 
+  Future<void> _saveEmail(String email) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setString('last_logged_in_email', email);
+}
+
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -312,47 +318,46 @@ class _FormContentState extends State<_FormContent> {
                   ),
                 ),
                 onPressed: () {
-                  if (_formKey.currentState?.validate() ?? false) {
-                    if (!_agreement) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text(
-                            'You must agree to the terms and conditions to continue',
-                          ),
-                        ),
-                      );
-                      return;
-                    }
-                    FirebaseAuth.instance
-                        .createUserWithEmailAndPassword(
-                            email: _emailController.text,
-                            password: _passwordController.text)
-                        .then((userCredential) {
-                      print(userCredential);
-                      final user = <String, dynamic>{
-                        "username": _usernameController.text,
-                        "email": _emailController.text,
-                        "isAdmin": false,
-                      };
-                      db
-                          .collection("users")
-                          .doc(_emailController.text)
-                          .set(user)
-                          .then((value) {
-                        print("User added successfully");
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => HomePage(),
-                          ),
-                        );
-                      }).catchError(
-                              (error) => print("Failed to add user: $error"));
-                    }).catchError((error) {
-                      print("Failed to create user: $error");
-                    });
-                  }
-                },
+  if (_formKey.currentState?.validate() ?? false) {
+    if (!_agreement) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'You must agree to the terms and conditions to continue',
+          ),
+        ),
+      );
+      return;
+    }
+    FirebaseAuth.instance
+        .createUserWithEmailAndPassword(
+            email: _emailController.text, password: _passwordController.text)
+        .then((userCredential) async {
+      print(userCredential);
+      final user = <String, dynamic>{
+        "username": _usernameController.text,
+        "email": _emailController.text,
+        "isAdmin": false,
+      };
+      await _saveEmail(_emailController.text);  
+      db.collection("users")
+          .doc(_emailController.text)
+          .set(user)
+          .then((value) {
+        print("User added successfully");
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomePage(),
+          ),
+        );
+      }).catchError((error) => print("Failed to add user: $error"));
+    }).catchError((error) {
+      print("Failed to create user: $error");
+    });
+  }
+}
+
               ),
             ),
           ],
